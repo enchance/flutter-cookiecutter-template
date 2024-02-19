@@ -1,0 +1,7 @@
+{
+    "project_name": "myproject",
+    "organization": "com.jimbonglabs",
+    "enable_dark_mode": true,
+    "author": "enchance",
+    "email": "{{ cookiecutter.author }}@gmail.com"
+}
