@@ -1,10 +1,9 @@
 {
     "project_name": "myproject",
     "organization": "com.jimbonglabs",
-    "enable_dark_mode": true,
     "author": "enchance",
     "email": "{{ cookiecutter.author }}@gmail.com",
     "install_dependencies": true,
-    "use_firebase": true,
+    "enable_google_signin": true,
     "_jinja2_env_vars": {"lstrip_blocks": true, "trim_blocks": true}
 }
