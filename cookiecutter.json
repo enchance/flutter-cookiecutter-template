@@ -3,5 +3,9 @@
     "organization": "com.jimbonglabs",
     "enable_dark_mode": true,
     "author": "enchance",
-    "email": "{{ cookiecutter.author }}@gmail.com"
+    "email": "{{ cookiecutter.author }}@gmail.com",
+    "install_dep": true,
+    "__prompts__": {
+        "install_dep": "Install dependencies?"
+    }
 }

@@ -5,21 +5,38 @@ from pathlib import Path
 
 
 def move_files_to_lib(project_name):
-    curdir = Path(os.curdir).resolve()
-    parentdir = curdir.parent
-    libdir = os.path.join(curdir, project_name, 'lib')
+    project_folder = f'__{project_name}'
+    os.rename(Path(os.curdir).resolve(), os.path.join(Path(os.curdir).resolve().parent, project_folder))
+
+    projectdir = Path(os.curdir).resolve()
+    parentdir = projectdir.parent
+
+    templatelib = os.path.join(projectdir, 'lib')
+    libdir = os.path.join(project_name, 'lib')
     os.rename(os.path.join(libdir, 'main.dart'), os.path.join(libdir, '__main.dart'))
-    shutil.move(os.path.join(curdir, '.github'), os.path.join(curdir, project_name))
 
+    # print(templatelib)
+    # print(libdir)
+    # print(projectdir)
+    # print(parentdir)
+
+    # Move root files
     for item in os.listdir():
-        if item != project_name:
-            shutil.move(item, libdir)
+        if item not in ['lib', project_name]:
+            src = os.path.join(projectdir, item)
+            dest = os.path.join(projectdir, project_name)
+            if os.path.exists(os.path.join(dest, item)):
+                os.remove(os.path.join(dest, item))
+            shutil.move(src, dest)
 
+    # Move lib files
+    for item in os.listdir(templatelib):
+        src = os.path.join(templatelib, item)
+        shutil.move(src, libdir)
 
     # Replace project folder with flutter folder
-    os.rename(curdir, os.path.join(parentdir, f'__{project_name}'))
     shutil.move(project_name, parentdir)
-    os.rmdir(os.path.join(parentdir, f'__{project_name}'))
+    shutil.rmtree(os.path.join(parentdir, project_folder))
 
 
 
