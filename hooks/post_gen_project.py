@@ -1,6 +1,6 @@
 #!/bin/bash/env python
 
-import subprocess, shutil, os               # noqa
+import subprocess, shutil, os  # noqa
 from pathlib import Path
 
 
@@ -34,10 +34,9 @@ def move_files_to_lib(project_name):
         src = os.path.join(templatelib, item)
         shutil.move(src, libdir)
 
-    # Replace project folder with flutter folder
+    # Move entire flutter folder
     shutil.move(project_name, parentdir)
     shutil.rmtree(os.path.join(parentdir, project_folder))
-
 
 
 def main():
