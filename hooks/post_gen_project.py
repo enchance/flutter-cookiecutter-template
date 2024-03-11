@@ -44,6 +44,11 @@ def main():
     project_name = "{{ cookiecutter.project_name }}"
 
     subprocess.run(["flutter", "create", "--org", organization, project_name])
+
+    os.chdir('{{ cookiecutter.project_name }}')
+    subprocess.run(['flutterfire', 'configure'])
+    os.chdir('..')
+
     move_files_to_lib(project_name)
 
 
