@@ -4,7 +4,6 @@
     "author": "enchance",
     "email": "{{ cookiecutter.author }}@gmail.com",
     "country": "PH",
-    "install_dependencies": true,
     "enable_google_signin": true,
     "_jinja2_env_vars": {"lstrip_blocks": true, "trim_blocks": true}
 }
