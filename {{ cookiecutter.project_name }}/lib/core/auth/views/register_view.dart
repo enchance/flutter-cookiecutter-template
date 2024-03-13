@@ -19,7 +19,7 @@ class RegisterView extends ConsumerStatefulWidget {
 class _RegisterViewState extends ConsumerState<RegisterView> {
   final formKey = GlobalKey<FormBuilderState>();
   bool obscure = true;
-  bool failed = false;
+  bool onFailed = false;
   String? passwd = 'pass123';
 
   @override
@@ -29,7 +29,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
     
     ref.listen(authProvider, (_, next) {
       if(next.isLoading) return;
-      if(next.hasError) setState(() => failed = true);
+      if(next.hasError) setState(() => onFailed = true);
     });
 
     return Scaffold(
@@ -54,7 +54,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                     const SizedBox(height: 20),
                     // const MastheadPlaceholderImage(),
                     const Icon(Bootstrap.person_circle, size: 70),
-                    if (failed) ...[
+                    if (onFailed) ...[
                       const SizedBox(height: 20),
                       NoticeBox.error(errorMessages['ACCOUNT_EXISTS']!),
                     ],
@@ -133,6 +133,8 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 20),
+                    buildSignIn(),
                     SizedBox(height: settings.bottomGap),
                   ],
                 ),
@@ -154,5 +156,19 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
       logger.e(err);
       rethrow;
     }
+  }
+
+  Widget buildSignIn() {
+    return TextButton(
+      onPressed: () => context.goNamed('signin'),
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 7),
+      ),
+      child: const Text('Back to Sign-in',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+          )),
+    );
   }
 }

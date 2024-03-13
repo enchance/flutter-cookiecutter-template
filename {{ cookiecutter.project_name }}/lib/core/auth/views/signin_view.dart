@@ -19,7 +19,7 @@ class EmailSignInView extends ConsumerStatefulWidget {
 class _SigninViewState extends ConsumerState<EmailSignInView> {
   final formKey = GlobalKey<FormBuilderState>();
   bool obscure = true;
-  bool failed = false;
+  bool onFailed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,8 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
     final authprov = ref.watch(authProvider);
 
     ref.listen(authProvider, (_, next) {
-      if(next.isLoading) return;
-      if(next.hasError) setState(() => failed = true);
+      if (next.isLoading) return;
+      if (next.hasError) setState(() => onFailed = true);
     });
 
     return Scaffold(
@@ -50,12 +50,12 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
                 children: [
                   const SizedBox(height: 20),
                   const MastheadPlaceholderImage(),
-                  if (failed) ...[
+                  if (onFailed) ...[
                     const SizedBox(height: 20),
                     NoticeBox.error(errorMessages['INCORRECT_PASSWORD']!),
                   ],
                   const SizedBox(height: 20),
-                  Text('Sign-in', style: Theme.of(context).textTheme.titleMedium,),
+                  Text('Sign-in', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 20),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: settings.maxWidth),
@@ -66,9 +66,7 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
                         FormBuilderValidators.required(),
                         FormBuilderValidators.email(),
                       ]),
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Email'),
                       keyboardType: TextInputType.name,
                     ),
                   ),

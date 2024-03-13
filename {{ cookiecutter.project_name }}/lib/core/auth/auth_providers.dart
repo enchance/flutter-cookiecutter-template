@@ -173,3 +173,18 @@ class Auth extends _$Auth {
     // ref.read(devLogProvider.notifier).clear();
   }
 }
+
+
+@riverpod
+class ResetPassword extends _$ResetPassword {
+  @override
+  FutureOr<bool?> build() => null;
+
+  Future<void> resetPassword(String email) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      return true;
+    });
+  }
+}

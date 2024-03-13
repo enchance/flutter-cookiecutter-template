@@ -23,7 +23,7 @@ class AuthSelectionView extends ConsumerStatefulWidget {
 }
 
 class _AuthSelectionViewState extends ConsumerState<AuthSelectionView> {
-  bool failed = false;
+  bool onFailed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _AuthSelectionViewState extends ConsumerState<AuthSelectionView> {
 
     ref.listen(authProvider, (_, next) {
       if(next.isLoading) return;
-      if(next.hasError) setState(() => failed = true);
+      if(next.hasError) setState(() => onFailed = true);
     });
 
     return Scaffold(
@@ -49,7 +49,7 @@ class _AuthSelectionViewState extends ConsumerState<AuthSelectionView> {
                   children: [
                     const SizedBox(height: 20),
                     const MastheadPlaceholderImage(),
-                    if (failed) ...[
+                    if (onFailed) ...[
                       const SizedBox(height: 20),
                       NoticeBox.error(errorMessages['FAILED_GOOGLE_SIGNIN']!),
                     ],

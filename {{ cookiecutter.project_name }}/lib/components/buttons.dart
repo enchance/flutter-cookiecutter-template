@@ -10,7 +10,7 @@ class ButtonLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpinKitThreeBounce(
-      color: color ?? Theme.of(context).colorScheme.onPrimary,
+      color: color ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
       size: 20,
     );
   }

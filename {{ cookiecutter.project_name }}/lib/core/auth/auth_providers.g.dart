@@ -62,5 +62,21 @@ final authProvider = AutoDisposeAsyncNotifierProvider<Auth, Account?>.internal(
 );
 
 typedef _$Auth = AutoDisposeAsyncNotifier<Account?>;
+String _$resetPasswordHash() => r'6181a0fde0510345ff314a6ee21215a5db3f3a86';
+
+/// See also [ResetPassword].
+@ProviderFor(ResetPassword)
+final resetPasswordProvider =
+    AutoDisposeAsyncNotifierProvider<ResetPassword, bool?>.internal(
+  ResetPassword.new,
+  name: r'resetPasswordProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$resetPasswordHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ResetPassword = AutoDisposeAsyncNotifier<bool?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

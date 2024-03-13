@@ -59,7 +59,7 @@ class _IndexViewState extends ConsumerState<IndexView> {
                         ),
                         child: authprov.maybeWhen(
                             loading: () => SpinKitThreeBounce(
-                                  color: Theme.of(context).colorScheme.onPrimary,
+                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
                                   size: 20,
                                 ),
                             orElse: () => const Text('Get started')),
