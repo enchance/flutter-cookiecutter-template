@@ -554,3 +554,4 @@ hs_err_pid*
 firebase-adminsdk.json
 service-account.json
 *service-account.json
+firebase_options.dart

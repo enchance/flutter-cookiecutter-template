@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:popolscan/core/core.dart';
 
-import '../../gen/colors.gen.dart';
+import '../core.dart';
 import 'base_theme.dart';
-import '../utils.dart';
 
 class IndexTheme {
   static final BaseTheme _lightTheme = BaseTheme(
-    background: Colorgen.grey.shade50,
+    background: Colors.grey.shade100,
     onBackground: Colors.black87,
+    primary: const Color(0xFF62D2A5),
+    secondary: const Color(0xFFffb400),
+    tertiary: const Color(0xFFe8eddf),
     surface: Colors.grey.shade800,
     onSurface: Colors.white,
   );
   static final BaseTheme _darkTheme = BaseTheme(
     background: Colors.grey.shade800,
     onBackground: Colors.white,
-    surface: Colorgen.grey.shade50,
+    surface: Colors.grey.shade50,
     onSurface: Colors.black87,
   );
+
   static ThemeData get lt => _lightTheme.theme;
+
   static ThemeData get dt => _darkTheme.theme;
+
   static ColorScheme get ltcolor => _lightTheme.theme.colorScheme;
+
   static ColorScheme get dtcolor => _darkTheme.theme.colorScheme;
 
   IndexTheme._();
@@ -37,18 +41,15 @@ class IndexTheme {
   * */
   static ThemeData light = lt.copyWith(
     brightness: Brightness.light,
-    appBarTheme: lt.appBarTheme.copyWith(
-      backgroundColor: Colors.white,
-    ),
-    inputDecorationTheme: lt.inputDecorationTheme.copyWith(
-      filled: true,
-      fillColor: Colorgen.grey.shade100,
-      hintStyle: lt.inputDecorationTheme.hintStyle!.copyWith(
-        color: Colorgen.grey,
-      ),
-      enabledBorder: lt.inputDecorationTheme.enabledBorder!
-          .copyWith(borderSide: BorderSide(color: Colorgen.grey.shade500)),
-    ),
+    // inputDecorationTheme: lt.inputDecorationTheme.copyWith(
+    //   filled: true,
+    //   fillColor: Colors.grey.shade100,
+    //   hintStyle: lt.inputDecorationTheme.hintStyle!.copyWith(
+    //     color: Colors.grey,
+    //   ),
+    //   enabledBorder: lt.inputDecorationTheme.enabledBorder!
+    //       .copyWith(borderSide: BorderSide(color: Colors.grey.shade500)),
+    // ),
   );
 
   /*
@@ -70,22 +71,17 @@ class IndexTheme {
     appBarTheme: dt.appBarTheme.copyWith(
       titleTextStyle: dt.appBarTheme.titleTextStyle!.copyWith(color: dtcolor.onBackground),
     ),
-    inputDecorationTheme: dt.inputDecorationTheme.copyWith(
-      filled: true,
-      fillColor: tintColor(dtcolor.background, 0.08),
-      hintStyle: dt.inputDecorationTheme.hintStyle!.copyWith(color: Colorgen.grey),
-      labelStyle: const TextStyle(color: Colors.white60),
-      enabledBorder: dt.inputDecorationTheme.enabledBorder!
-          .copyWith(borderSide: BorderSide(color: Colorgen.grey.shade500)),
-      errorStyle: TextStyle(color: Colors.pink.shade200),
-      focusedErrorBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.pink.shade200),
-      ),
-    ),
-    // listTileTheme: ListTileThemeData(
-    //   textColor: dtcolor.onBackground,
-    //   iconColor: dtcolor.onBackground,
-    //   tileColor: Colors.red,
+    // inputDecorationTheme: dt.inputDecorationTheme.copyWith(
+    //   filled: true,
+    //   fillColor: tintColor(dtcolor.background, 0.08),
+    //   hintStyle: dt.inputDecorationTheme.hintStyle!.copyWith(color: Colors.grey),
+    //   labelStyle: const TextStyle(color: Colors.white60),
+    //   enabledBorder: dt.inputDecorationTheme.enabledBorder!
+    //       .copyWith(borderSide: BorderSide(color: Colors.grey.shade500)),
+    //   errorStyle: TextStyle(color: Colors.pink.shade200),
+    //   focusedErrorBorder: UnderlineInputBorder(
+    //     borderSide: BorderSide(color: Colors.pink.shade200),
+    //   ),
     // ),
   );
 }

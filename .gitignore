@@ -320,3 +320,11 @@ bh_unicode_properties.cache
 GitHub.sublime-settings
 
 # End of https://www.toptal.com/developers/gitignore/api/python,intellij,sublimetext
+
+
+!/lib/
+!/lib/gen/
+firebase-adminsdk.json
+service-account.json
+*service-account.json
+firebase_options.dart

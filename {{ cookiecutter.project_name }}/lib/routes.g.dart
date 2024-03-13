@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'globals.dart';
+part of 'routes.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'41b696b35e5b56ccb124ee5abab8b893747d2153';
+String _$routesHash() => r'f8ad05998ec776d558dbcbbd7360096e90a61a40';
 
-/// See also [dio].
-@ProviderFor(dio)
-final dioProvider = Provider<Dio>.internal(
-  dio,
-  name: r'dioProvider',
+/// See also [routes].
+@ProviderFor(routes)
+final routesProvider = AutoDisposeProvider<GoRouter>.internal(
+  routes,
+  name: r'routesProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$dioHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$routesHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef DioRef = ProviderRef<Dio>;
+typedef RoutesRef = AutoDisposeProviderRef<GoRouter>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -14,35 +14,36 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-ApplicationSettings _$ApplicationSettingsFromJson(Map<String, dynamic> json) {
-  return _ApplicationSettings.fromJson(json);
-}
-
 /// @nodoc
-mixin _$ApplicationSettings {
-  bool get darkmode => throw _privateConstructorUsedError;
-  String get fontsize => throw _privateConstructorUsedError;
-  int get fetchCount => throw _privateConstructorUsedError;
+mixin _$SettingsMod {
+// Also update `Startup.initPreferences()`, `config/conf.dart`
+  bool get darkMode => throw _privateConstructorUsedError;
+  FontSizes get fontSize => throw _privateConstructorUsedError;
+  bool get lockPortrait => throw _privateConstructorUsedError;
+  bool get allowNotifications => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ApplicationSettingsCopyWith<ApplicationSettings> get copyWith =>
+  $SettingsModCopyWith<SettingsMod> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ApplicationSettingsCopyWith<$Res> {
-  factory $ApplicationSettingsCopyWith(
-          ApplicationSettings value, $Res Function(ApplicationSettings) then) =
-      _$ApplicationSettingsCopyWithImpl<$Res, ApplicationSettings>;
+abstract class $SettingsModCopyWith<$Res> {
+  factory $SettingsModCopyWith(
+          SettingsMod value, $Res Function(SettingsMod) then) =
+      _$SettingsModCopyWithImpl<$Res, SettingsMod>;
   @useResult
-  $Res call({bool darkmode, String fontsize, int fetchCount});
+  $Res call(
+      {bool darkMode,
+      FontSizes fontSize,
+      bool lockPortrait,
+      bool allowNotifications});
 }
 
 /// @nodoc
-class _$ApplicationSettingsCopyWithImpl<$Res, $Val extends ApplicationSettings>
-    implements $ApplicationSettingsCopyWith<$Res> {
-  _$ApplicationSettingsCopyWithImpl(this._value, this._then);
+class _$SettingsModCopyWithImpl<$Res, $Val extends SettingsMod>
+    implements $SettingsModCopyWith<$Res> {
+  _$SettingsModCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -52,141 +53,157 @@ class _$ApplicationSettingsCopyWithImpl<$Res, $Val extends ApplicationSettings>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? darkmode = null,
-    Object? fontsize = null,
-    Object? fetchCount = null,
+    Object? darkMode = null,
+    Object? fontSize = null,
+    Object? lockPortrait = null,
+    Object? allowNotifications = null,
   }) {
     return _then(_value.copyWith(
-      darkmode: null == darkmode
-          ? _value.darkmode
-          : darkmode // ignore: cast_nullable_to_non_nullable
+      darkMode: null == darkMode
+          ? _value.darkMode
+          : darkMode // ignore: cast_nullable_to_non_nullable
               as bool,
-      fontsize: null == fontsize
-          ? _value.fontsize
-          : fontsize // ignore: cast_nullable_to_non_nullable
-              as String,
-      fetchCount: null == fetchCount
-          ? _value.fetchCount
-          : fetchCount // ignore: cast_nullable_to_non_nullable
-              as int,
+      fontSize: null == fontSize
+          ? _value.fontSize
+          : fontSize // ignore: cast_nullable_to_non_nullable
+              as FontSizes,
+      lockPortrait: null == lockPortrait
+          ? _value.lockPortrait
+          : lockPortrait // ignore: cast_nullable_to_non_nullable
+              as bool,
+      allowNotifications: null == allowNotifications
+          ? _value.allowNotifications
+          : allowNotifications // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$ApplicationSettingsImplCopyWith<$Res>
-    implements $ApplicationSettingsCopyWith<$Res> {
-  factory _$$ApplicationSettingsImplCopyWith(_$ApplicationSettingsImpl value,
-          $Res Function(_$ApplicationSettingsImpl) then) =
-      __$$ApplicationSettingsImplCopyWithImpl<$Res>;
+abstract class _$$SettingsModImplCopyWith<$Res>
+    implements $SettingsModCopyWith<$Res> {
+  factory _$$SettingsModImplCopyWith(
+          _$SettingsModImpl value, $Res Function(_$SettingsModImpl) then) =
+      __$$SettingsModImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool darkmode, String fontsize, int fetchCount});
+  $Res call(
+      {bool darkMode,
+      FontSizes fontSize,
+      bool lockPortrait,
+      bool allowNotifications});
 }
 
 /// @nodoc
-class __$$ApplicationSettingsImplCopyWithImpl<$Res>
-    extends _$ApplicationSettingsCopyWithImpl<$Res, _$ApplicationSettingsImpl>
-    implements _$$ApplicationSettingsImplCopyWith<$Res> {
-  __$$ApplicationSettingsImplCopyWithImpl(_$ApplicationSettingsImpl _value,
-      $Res Function(_$ApplicationSettingsImpl) _then)
+class __$$SettingsModImplCopyWithImpl<$Res>
+    extends _$SettingsModCopyWithImpl<$Res, _$SettingsModImpl>
+    implements _$$SettingsModImplCopyWith<$Res> {
+  __$$SettingsModImplCopyWithImpl(
+      _$SettingsModImpl _value, $Res Function(_$SettingsModImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? darkmode = null,
-    Object? fontsize = null,
-    Object? fetchCount = null,
+    Object? darkMode = null,
+    Object? fontSize = null,
+    Object? lockPortrait = null,
+    Object? allowNotifications = null,
   }) {
-    return _then(_$ApplicationSettingsImpl(
-      darkmode: null == darkmode
-          ? _value.darkmode
-          : darkmode // ignore: cast_nullable_to_non_nullable
+    return _then(_$SettingsModImpl(
+      darkMode: null == darkMode
+          ? _value.darkMode
+          : darkMode // ignore: cast_nullable_to_non_nullable
               as bool,
-      fontsize: null == fontsize
-          ? _value.fontsize
-          : fontsize // ignore: cast_nullable_to_non_nullable
-              as String,
-      fetchCount: null == fetchCount
-          ? _value.fetchCount
-          : fetchCount // ignore: cast_nullable_to_non_nullable
-              as int,
+      fontSize: null == fontSize
+          ? _value.fontSize
+          : fontSize // ignore: cast_nullable_to_non_nullable
+              as FontSizes,
+      lockPortrait: null == lockPortrait
+          ? _value.lockPortrait
+          : lockPortrait // ignore: cast_nullable_to_non_nullable
+              as bool,
+      allowNotifications: null == allowNotifications
+          ? _value.allowNotifications
+          : allowNotifications // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
 
 /// @nodoc
-@JsonSerializable()
-class _$ApplicationSettingsImpl implements _ApplicationSettings {
-  const _$ApplicationSettingsImpl(
-      {required this.darkmode, required this.fontsize, this.fetchCount = 10});
 
-  factory _$ApplicationSettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ApplicationSettingsImplFromJson(json);
+class _$SettingsModImpl extends _SettingsMod {
+  const _$SettingsModImpl(
+      {this.darkMode = conf.darkMode,
+      this.fontSize = conf.fontSize,
+      this.lockPortrait = conf.lockPortrait,
+      this.allowNotifications = conf.allowNotifications})
+      : super._();
 
-  @override
-  final bool darkmode;
-  @override
-  final String fontsize;
+// Also update `Startup.initPreferences()`, `config/conf.dart`
   @override
   @JsonKey()
-  final int fetchCount;
+  final bool darkMode;
+  @override
+  @JsonKey()
+  final FontSizes fontSize;
+  @override
+  @JsonKey()
+  final bool lockPortrait;
+  @override
+  @JsonKey()
+  final bool allowNotifications;
 
   @override
   String toString() {
-    return 'ApplicationSettings(darkmode: $darkmode, fontsize: $fontsize, fetchCount: $fetchCount)';
+    return 'SettingsMod(darkMode: $darkMode, fontSize: $fontSize, lockPortrait: $lockPortrait, allowNotifications: $allowNotifications)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ApplicationSettingsImpl &&
-            (identical(other.darkmode, darkmode) ||
-                other.darkmode == darkmode) &&
-            (identical(other.fontsize, fontsize) ||
-                other.fontsize == fontsize) &&
-            (identical(other.fetchCount, fetchCount) ||
-                other.fetchCount == fetchCount));
+            other is _$SettingsModImpl &&
+            (identical(other.darkMode, darkMode) ||
+                other.darkMode == darkMode) &&
+            (identical(other.fontSize, fontSize) ||
+                other.fontSize == fontSize) &&
+            (identical(other.lockPortrait, lockPortrait) ||
+                other.lockPortrait == lockPortrait) &&
+            (identical(other.allowNotifications, allowNotifications) ||
+                other.allowNotifications == allowNotifications));
   }
 
-  @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, darkmode, fontsize, fetchCount);
+  int get hashCode => Object.hash(
+      runtimeType, darkMode, fontSize, lockPortrait, allowNotifications);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ApplicationSettingsImplCopyWith<_$ApplicationSettingsImpl> get copyWith =>
-      __$$ApplicationSettingsImplCopyWithImpl<_$ApplicationSettingsImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ApplicationSettingsImplToJson(
-      this,
-    );
-  }
+  _$$SettingsModImplCopyWith<_$SettingsModImpl> get copyWith =>
+      __$$SettingsModImplCopyWithImpl<_$SettingsModImpl>(this, _$identity);
 }
 
-abstract class _ApplicationSettings implements ApplicationSettings {
-  const factory _ApplicationSettings(
-      {required final bool darkmode,
-      required final String fontsize,
-      final int fetchCount}) = _$ApplicationSettingsImpl;
+abstract class _SettingsMod extends SettingsMod {
+  const factory _SettingsMod(
+      {final bool darkMode,
+      final FontSizes fontSize,
+      final bool lockPortrait,
+      final bool allowNotifications}) = _$SettingsModImpl;
+  const _SettingsMod._() : super._();
 
-  factory _ApplicationSettings.fromJson(Map<String, dynamic> json) =
-      _$ApplicationSettingsImpl.fromJson;
-
+  @override // Also update `Startup.initPreferences()`, `config/conf.dart`
+  bool get darkMode;
   @override
-  bool get darkmode;
+  FontSizes get fontSize;
   @override
-  String get fontsize;
+  bool get lockPortrait;
   @override
-  int get fetchCount;
+  bool get allowNotifications;
   @override
   @JsonKey(ignore: true)
-  _$$ApplicationSettingsImplCopyWith<_$ApplicationSettingsImpl> get copyWith =>
+  _$$SettingsModImplCopyWith<_$SettingsModImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -44,9 +44,9 @@ class BaseTheme {
   double bodySmallFontSize = 16;
   double bodyMediumFontSize = 18;
   double bodyLargeFontSize = 20;
-  double titleSmallFontSize = 22;
-  double titleMediumFontSize = 24;
-  double titleLargeFontSize = 28;
+  double titleSmallFontSize = 28;
+  double titleMediumFontSize = 34;
+  double titleLargeFontSize = 44;
   double displaySmallFontSize = 22;
   double displayMediumFontSize = 24;
   double displayLargeFontSize = 28;
@@ -54,17 +54,17 @@ class BaseTheme {
   BaseTheme(
       {required this.background,
       required this.onBackground,
-      this.primary = const Color(0xFF57cc99),
+      this.primary = Colors.blue,
       this.onPrimary = Colors.black87,
-      this.secondary = const Color(0xFFffb400),
+      this.secondary = Colors.green,
       this.onSecondary = Colors.black87,
-      this.tertiary = const Color(0xFFe8eddf),
+      this.tertiary = Colors.teal,
       this.onTertiary = Colors.black54,
       required this.surface,
       required this.onSurface})
-      : bodyStyle = TextStyle(color: onBackground),
-        titleStyle = TextStyle(color: onBackground, fontWeight: FontWeight.bold),
-        displayStyle = TextStyle(color: onBackground);
+      : bodyStyle = TextStyle(color: onBackground, height: 1.2),
+        titleStyle = TextStyle(color: onBackground, fontWeight: FontWeight.bold, height: 1),
+        displayStyle = TextStyle(color: onBackground, height: 1);
 
   ThemeData get theme => ThemeData(useMaterial3: true).copyWith(
         // TODO: Don't use Colorgen for the base theme
@@ -106,22 +106,45 @@ class BaseTheme {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 50)),
-            textStyle: const MaterialStatePropertyAll<TextStyle>(
-              TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(vertical: 12)),
-            shape: MaterialStatePropertyAll(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
-            surfaceTintColor: const MaterialStatePropertyAll<Color>(Colors.transparent),
+            overlayColor: const MaterialStatePropertyAll<Color>(Colors.orangeAccent),
             backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-              return states.contains(MaterialState.disabled) ? tintColor(primary, 0.4) : primary;
+              return states.contains(MaterialState.disabled) ? Colors.grey.shade300 : primary;
             }),
             foregroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-              return states.contains(MaterialState.disabled) ? shadeColor(primary, 0.1) : onPrimary;
+              return states.contains(MaterialState.disabled) ? Colors.grey : onPrimary;
             }),
+            minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 45)),
+            shape: MaterialStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+            ),
+            textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
+              fontSize: bodyMediumFontSize,
+              fontWeight: FontWeight.bold,
+            )),
+            padding: const MaterialStatePropertyAll<EdgeInsets>(
+              EdgeInsets.symmetric(vertical: 12),
+            ),
           ),
         ),
+        // elevatedButtonTheme: ElevatedButtonThemeData(
+        //   style: ButtonStyle(
+        //     overlayColor: MaterialStatePropertyAll<Color>(tintColor(primary, 0.3)),
+        //     minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 50)),
+        //     textStyle: const MaterialStatePropertyAll<TextStyle>(
+        //       TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        //     ),
+        //     padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(vertical: 12)),
+        //     shape: MaterialStatePropertyAll(
+        //         RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
+        //     surfaceTintColor: const MaterialStatePropertyAll<Color>(Colors.transparent),
+        //     backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        //       return states.contains(MaterialState.disabled) ? tintColor(primary, 0.4) : primary;
+        //     }),
+        //     foregroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        //       return states.contains(MaterialState.disabled) ? shadeColor(primary, 0.1) : onPrimary;
+        //     }),
+        //   ),
+        // ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 50)),
@@ -141,6 +164,28 @@ class BaseTheme {
             foregroundColor: const MaterialStatePropertyAll<Color>(Colors.grey),
           ),
         ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey.shade200,
+          contentPadding: const EdgeInsets.only(top: 7, bottom: 2, left: 5, right: 0),
+          counterStyle: const TextStyle(color: Colors.grey),
+          hintStyle: bodyStyle.copyWith(color: Colors.grey),
+          labelStyle: const TextStyle(color: Colors.grey),
+          floatingLabelStyle: TextStyle(
+            color: Colors.grey,
+            fontWeight: FontWeight.bold,
+            fontSize: bodyMediumFontSize,
+          ),
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey),
+          ),
+          prefixIconColor: Colors.grey,
+          suffixIconColor: Colors.grey,
+        ),
+        iconButtonTheme: IconButtonThemeData(
+            style: ButtonStyle(
+          overlayColor: MaterialStatePropertyAll<Color>(tintColor(primary, 0.3)),
+        )),
         textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
             textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
@@ -149,20 +194,13 @@ class BaseTheme {
             )),
           ),
         ),
-        inputDecorationTheme: InputDecorationTheme(
-          contentPadding: const EdgeInsets.only(top: 2, bottom: 2, left: 10, right: 0),
-          hintStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-          labelStyle: const TextStyle(color: Colors.black54),
-          floatingLabelStyle: TextStyle(
-            color: onBackground,
-            fontWeight: FontWeight.bold,
-            fontSize: bodySmallFontSize,
-          ),
-          enabledBorder: const UnderlineInputBorder(),
-        ),
-        checkboxTheme: CheckboxThemeData(
-          side: BorderSide(color: onBackground),
-        ),
+        // checkboxTheme: CheckboxThemeData(
+        //   side: BorderSide(color: onBackground),
+        // ),
+        // listTileTheme: ListTileThemeData(
+        //   iconColor: onBackground,
+        //   textColor: onBackground,
+        // ),
         cardTheme: CardTheme(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius),
@@ -171,10 +209,6 @@ class BaseTheme {
         tabBarTheme: const TabBarTheme(
           labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           unselectedLabelStyle: TextStyle(fontWeight: FontWeight.normal),
-        ),
-        listTileTheme: ListTileThemeData(
-          iconColor: onBackground,
-          textColor: onBackground,
         ),
         switchTheme: SwitchThemeData(
           trackColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {

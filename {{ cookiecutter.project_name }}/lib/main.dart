@@ -1,68 +1,73 @@
-import 'dart:io';
-
+import 'package:cookiesrc/core/config/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'routes.dart';
 import 'core/core.dart';
-import 'core/config/routes.dart';
-import 'startup/startup.dart';
+import 'core/config/config.dart' as conf;
 
+// TODO: Merge AuthService to authProvider
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
+  // // For testing CachedNetworkImage
+  // if(!kDebugMode) {
+  //   SystemChrome.setPreferredOrientations([
+  //     DeviceOrientation.portraitDown,
+  //     DeviceOrientation.portraitUp,
+  //   ]);
+  //   DefaultCacheManager manager = DefaultCacheManager();
+  //   manager.emptyCache();
+  // }
 
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   try {
     await dotenv.load(fileName: '.env');
     final emulatorEnv = dotenv.env['USE_EMULATOR'] ?? '';
     final useEmulator = ['true', 't', 'yes', 'y', '1'].contains(emulatorEnv.toLowerCase());
 
     // Initialize
-    await Startup.initFirebase(useEmulator);
-    final prefs = await Startup.initPreferences();
+    await StartupService.initFirebase(useEmulator);
+    final prefs = await StartupService.initPrefs();
+    // FlutterNativeSplash.remove();
 
-    FlutterNativeSplash.remove();
-
-    runApp(ProviderScope(overrides: [
-      prefsProvider.overrideWithValue(prefs),
-      useEmulatorProvider.overrideWith((ref) => useEmulator),
-    ], child: const App()));
+    runApp(ProviderScope(
+      overrides: [
+        prefsProvider.overrideWithValue(prefs),
+        useEmulatorProvider.overrideWith((ref) => useEmulator),
+      ],
+      child: const App(),
+    ));
   } catch (err, _) {
     logger.d(err);
     rethrow;
-    // TODO: Error widget needed
   }
 }
 
-class App extends ConsumerStatefulWidget {
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  ConsumerState createState() => _AppState();
-}
-
-class _AppState extends ConsumerState<App> {
-  @override
-  Widget build(BuildContext context) {
-    final appsettings = ref.watch(appSettingsProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
     final routes = ref.watch(routesProvider);
 
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      builder: (context, child) => ResponsiveBreakpoints.builder(
+        breakpoints: settings.breakpoints,
+        child: child!,
+      ),
+      title: settings.apptitle,
       routerConfig: routes,
       debugShowCheckedModeBanner: false,
       theme: IndexTheme.light,
       darkTheme: IndexTheme.dark,
-      themeMode: appsettings.darkmode ? ThemeMode.dark : ThemeMode.light,
-      // themeMode: ThemeMode.dark,
+      // themeMode: settings.darkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.light,
     );
   }
 }

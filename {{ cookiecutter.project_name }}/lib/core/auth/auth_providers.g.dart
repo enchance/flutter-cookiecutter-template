@@ -6,7 +6,7 @@ part of 'auth_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authServiceHash() => r'ddbb3131f68b0645caa172d17997abcd8fdfbac5';
+String _$authServiceHash() => r'20e24c1859a34be3e2036cbd5c173074d665eb0e';
 
 /// See also [authService].
 @ProviderFor(authService)
@@ -34,5 +34,33 @@ final authStreamProvider = AutoDisposeStreamProvider<User?>.internal(
 );
 
 typedef AuthStreamRef = AutoDisposeStreamProviderRef<User?>;
+String _$userAccountHash() => r'69811a1b884fdd9b3034f1c98d0b676382722897';
+
+/// See also [UserAccount].
+@ProviderFor(UserAccount)
+final userAccountProvider = NotifierProvider<UserAccount, Account?>.internal(
+  UserAccount.new,
+  name: r'userAccountProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$userAccountHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$UserAccount = Notifier<Account?>;
+String _$authHash() => r'd5cd39caa6232e9bdc406e61ff672e8a008c3dba';
+
+/// See also [Auth].
+@ProviderFor(Auth)
+final authProvider = AutoDisposeAsyncNotifierProvider<Auth, Account?>.internal(
+  Auth.new,
+  name: r'authProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$authHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$Auth = AutoDisposeAsyncNotifier<Account?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
