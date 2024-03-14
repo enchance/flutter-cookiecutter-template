@@ -20,10 +20,10 @@ GoRouter routes(RoutesRef ref) {
       redirect: (context, state) {
         final guestUris = [
           '/index',
-          '/index/auth',
-          '/index/auth/signin',
-          '/index/auth/register',
-          '/index/auth/reset',
+          // '/index/auth',
+          '/index/signin',
+          '/index/register',
+          '/index/reset',
         ];
         bool isAuthenticating = guestUris.contains(state.matchedLocation);
 
@@ -44,26 +44,26 @@ GoRouter routes(RoutesRef ref) {
           builder: (_, state) => const IndexView(),
           routes: [
             GoRoute(
-                path: 'auth',
-                name: 'auth',
-                builder: (_, state) => const AuthSelectionView(),
-                routes: [
-                  GoRoute(
-                    path: 'signin',
-                    name: 'signin',
-                    builder: (_, state) => const EmailSignInView(),
-                  ),
-                  GoRoute(
-                    path: 'register',
-                    name: 'register',
-                    builder: (_, state) => const RegisterView(),
-                  ),
-                  GoRoute(
-                    path: 'reset',
-                    name: 'reset',
-                    builder: (_, state) => const ResetPasswordView(),
-                  ),
-                ]),
+              path: 'signin',
+              name: 'signin',
+              builder: (_, state) => const EmailSignInView(),
+            ),
+            GoRoute(
+              path: 'register',
+              name: 'register',
+              builder: (_, state) => const RegisterView(),
+            ),
+            GoRoute(
+              path: 'reset',
+              name: 'reset',
+              builder: (_, state) => const ResetPasswordView(),
+            ),
+            // GoRoute(
+            //     path: 'auth',
+            //     name: 'auth',
+            //     builder: (_, state) => const AuthSelectionView(),
+            //     routes: [
+            //     ]),
           ],
         ),
         GoRoute(

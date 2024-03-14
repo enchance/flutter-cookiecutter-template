@@ -48,7 +48,7 @@ final userAccountProvider = NotifierProvider<UserAccount, Account?>.internal(
 );
 
 typedef _$UserAccount = Notifier<Account?>;
-String _$authHash() => r'd5cd39caa6232e9bdc406e61ff672e8a008c3dba';
+String _$authHash() => r'415fa0b9ddb5d481c28e52d7bfa9321276590c7a';
 
 /// See also [Auth].
 @ProviderFor(Auth)
@@ -62,6 +62,37 @@ final authProvider = AutoDisposeAsyncNotifierProvider<Auth, Account?>.internal(
 );
 
 typedef _$Auth = AutoDisposeAsyncNotifier<Account?>;
+String _$anonymousSignInHash() => r'a7d9f98e977d47b6d92ee61cd2568edf1292b451';
+
+/// See also [AnonymousSignIn].
+@ProviderFor(AnonymousSignIn)
+final anonymousSignInProvider =
+    AutoDisposeAsyncNotifierProvider<AnonymousSignIn, Account?>.internal(
+  AnonymousSignIn.new,
+  name: r'anonymousSignInProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$anonymousSignInHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$AnonymousSignIn = AutoDisposeAsyncNotifier<Account?>;
+String _$xSignInHash() => r'007ac523861e7ba8599bcec51363f410d74d84d0';
+
+/// See also [xSignIn].
+@ProviderFor(xSignIn)
+final xSignInProvider =
+    AutoDisposeAsyncNotifierProvider<xSignIn, Account?>.internal(
+  xSignIn.new,
+  name: r'xSignInProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$xSignInHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$xSignIn = AutoDisposeAsyncNotifier<Account?>;
 String _$resetPasswordHash() => r'6181a0fde0510345ff314a6ee21215a5db3f3a86';
 
 /// See also [ResetPassword].

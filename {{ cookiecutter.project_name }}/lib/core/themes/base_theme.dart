@@ -6,17 +6,17 @@ import 'package:settings_ui/settings_ui.dart';
 
 import '../core.dart';
 
-/// https://pub.dev/packages/settings_ui
-SettingsThemeData getSettingsTheme(BuildContext context) {
-  return SettingsThemeData(
-    settingsListBackground: Theme.of(context).colorScheme.background,
-    settingsTileTextColor: Theme.of(context).colorScheme.onBackground,
-    // leadingIconsColor: Colors.grey,
-    leadingIconsColor: Theme.of(context).brightness == Brightness.light
-        ? Colors.grey.shade600
-        : Colors.grey.shade300,
-  );
-}
+// /// https://pub.dev/packages/settings_ui
+// SettingsThemeData getSettingsTheme(BuildContext context) {
+//   return SettingsThemeData(
+//     settingsListBackground: Theme.of(context).colorScheme.background,
+//     settingsTileTextColor: Theme.of(context).colorScheme.onBackground,
+//     // leadingIconsColor: Colors.grey,
+//     leadingIconsColor: Theme.of(context).brightness == Brightness.light
+//         ? Colors.grey.shade600
+//         : Colors.grey.shade300,
+//   );
+// }
 
 /*
 *  ____                   _____ _
@@ -26,6 +26,7 @@ SettingsThemeData getSettingsTheme(BuildContext context) {
 * |____/ \__,_|___/\___|   |_| |_| |_|\___|_| |_| |_|\___|
 * */
 class BaseTheme {
+  Brightness brightness;
   Color background;
   Color onBackground;
   Color primary;
@@ -54,6 +55,7 @@ class BaseTheme {
   BaseTheme(
       {required this.background,
       required this.onBackground,
+      required this.brightness,
       this.primary = Colors.blue,
       this.onPrimary = Colors.black87,
       this.secondary = Colors.green,
@@ -65,6 +67,8 @@ class BaseTheme {
       : bodyStyle = TextStyle(color: onBackground, height: 1.2),
         titleStyle = TextStyle(color: onBackground, fontWeight: FontWeight.bold, height: 1),
         displayStyle = TextStyle(color: onBackground, height: 1);
+
+  bool get isDark => brightness == Brightness.dark;
 
   ThemeData get theme => ThemeData(useMaterial3: true).copyWith(
         // TODO: Don't use Colorgen for the base theme
@@ -82,7 +86,8 @@ class BaseTheme {
             displayLarge: displayStyle.copyWith(fontSize: displayLargeFontSize),
           ),
         ),
-        colorScheme: ColorScheme.light(
+        colorScheme: ColorScheme(
+          brightness: brightness,
           background: background,
           onBackground: onBackground,
           primary: primary,
@@ -93,12 +98,14 @@ class BaseTheme {
           onTertiary: onTertiary,
           surface: surface,
           onSurface: onSurface,
-          errorContainer: tintColor(Colors.pink, 0.8),
+          errorContainer: Colors.pink.shade50,
+          error: Colors.pink.shade400,
+          onError: Colors.white,
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: background,
           foregroundColor: onBackground,
-          titleTextStyle: bodyStyle.copyWith(fontSize: 24, color: Colors.black87),
+          titleTextStyle: bodyStyle.copyWith(fontSize: 24, color: onBackground),
           iconTheme: IconThemeData(color: onBackground),
           shadowColor: Colors.black,
           // https://stackoverflow.com/questions/72379271/flutter-material3-disable-appbar-color-change-on-scroll/72773421#answer-72413437
@@ -108,6 +115,11 @@ class BaseTheme {
           style: ButtonStyle(
             overlayColor: const MaterialStatePropertyAll<Color>(Colors.orangeAccent),
             backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+              if (isDark) {
+                return states.contains(MaterialState.disabled)
+                    ? tintColor(background, 0.1)
+                    : primary;
+              }
               return states.contains(MaterialState.disabled) ? Colors.grey.shade300 : primary;
             }),
             foregroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -115,7 +127,7 @@ class BaseTheme {
             }),
             minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 45)),
             shape: MaterialStatePropertyAll(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
             ),
             textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
               fontSize: bodyMediumFontSize,
@@ -126,55 +138,64 @@ class BaseTheme {
             ),
           ),
         ),
-        // elevatedButtonTheme: ElevatedButtonThemeData(
-        //   style: ButtonStyle(
-        //     overlayColor: MaterialStatePropertyAll<Color>(tintColor(primary, 0.3)),
-        //     minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 50)),
-        //     textStyle: const MaterialStatePropertyAll<TextStyle>(
-        //       TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        //     ),
-        //     padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(vertical: 12)),
-        //     shape: MaterialStatePropertyAll(
-        //         RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
-        //     surfaceTintColor: const MaterialStatePropertyAll<Color>(Colors.transparent),
-        //     backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-        //       return states.contains(MaterialState.disabled) ? tintColor(primary, 0.4) : primary;
-        //     }),
-        //     foregroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-        //       return states.contains(MaterialState.disabled) ? shadeColor(primary, 0.1) : onPrimary;
-        //     }),
-        //   ),
-        // ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
-            minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 50)),
-            textStyle: const MaterialStatePropertyAll<TextStyle>(
-              TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            padding: const MaterialStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(vertical: 12)),
+            backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+              if (isDark) {
+                return states.contains(MaterialState.disabled)
+                    ? tintColor(background, 0.1)
+                    : Colors.transparent;
+              }
+              return states.contains(MaterialState.disabled)
+                  ? Colors.grey.shade300
+                  : Colors.transparent;
+            }),
+            foregroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+              return states.contains(MaterialState.disabled)
+                  ? Colors.grey.shade400
+                  : onBackground.withOpacity(0.5);
+            }),
+            // Size is slightly larger than ElevatedButton
+            minimumSize: const MaterialStatePropertyAll<Size>(Size(200, 48)),
+            side: MaterialStateProperty.resolveWith<BorderSide>((Set<MaterialState> states) {
+              if (isDark) {
+                return states.contains(MaterialState.disabled)
+                    ? BorderSide.none
+                    : const BorderSide(color: Colors.grey, width: 2);
+              }
+              return states.contains(MaterialState.disabled)
+                  ? BorderSide.none
+                  : BorderSide(color: Colors.grey.shade400, width: 2);
+            }),
             shape: MaterialStatePropertyAll(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(3))),
-            side: const MaterialStatePropertyAll<BorderSide>(BorderSide(color: Colors.grey)),
-            // surfaceTintColor: const MaterialStatePropertyAll<Color>(Colors.transparent),
-            // backgroundColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-            //   return states.contains(MaterialState.disabled)
-            //       ? tintColor(primary, 0.4)
-            //       : primary;
-            // }),
-            foregroundColor: const MaterialStatePropertyAll<Color>(Colors.grey),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
+            ),
+            textStyle: MaterialStatePropertyAll<TextStyle>(TextStyle(
+              fontSize: bodyMediumFontSize,
+              fontWeight: FontWeight.bold,
+            )),
+            padding: const MaterialStatePropertyAll<EdgeInsets>(
+              EdgeInsets.symmetric(vertical: 12),
+            ),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
-          fillColor: Colors.grey.shade200,
+          fillColor: isDark ? tintColor(background, 0.09) : Colors.grey.shade200,
           contentPadding: const EdgeInsets.only(top: 7, bottom: 2, left: 5, right: 0),
           counterStyle: const TextStyle(color: Colors.grey),
           hintStyle: bodyStyle.copyWith(color: Colors.grey),
           labelStyle: const TextStyle(color: Colors.grey),
           floatingLabelStyle: TextStyle(
-            color: Colors.grey,
+            color: isDark ? Colors.grey.shade400 : Colors.grey,
             fontWeight: FontWeight.bold,
             fontSize: bodyMediumFontSize,
+          ),
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(width: 1, color: Colors.pink.shade400),
+          ),
+          errorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(width: 1, color: Colors.pink.shade400),
           ),
           enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),

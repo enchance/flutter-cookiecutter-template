@@ -10,7 +10,7 @@ class RegisterHereText extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('No account yet?', style: TextStyle(color: Colors.grey)),
+        const Text('No account?', style: TextStyle(color: Colors.grey)),
         TextButton(
           onPressed: () => context.goNamed('register'),
           style: TextButton.styleFrom(

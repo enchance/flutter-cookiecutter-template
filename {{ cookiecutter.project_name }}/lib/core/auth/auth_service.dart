@@ -68,7 +68,11 @@ class AccountService {
   }
 
   /// Get the account record for [uid] from Firestore if exists else create it.
-  static Future<Account?> getAndCreate({required User user, String photoUrl = ''}) async {
+  static Future<Account?> getAndCreate({
+    required User user,
+    AuthType? protocol,
+    String photoUrl = '',
+  }) async {
     try {
       final db = FirebaseFirestore.instance;
       final ref = db.collection(Collection.accounts.name).doc(user.uid);
@@ -77,10 +81,20 @@ class AccountService {
       Account account;
       if (refget.exists) {
         // logger.d('EXISTS');
-        account = Account.fromJson(refget.data() as Map<String, dynamic>);
+        try {
+          account = Account.fromJson(refget.data() as Map<String, dynamic>);
+          logger.d(account);
+        } catch (err, _) {
+          logger.e(err);
+          rethrow;
+        }
+        if (protocol != null && !account.protocols.contains(protocol)) {
+          await AccountService.addProtocol(account.uid, protocol);
+          account = account.copyWith(protocols: [...account.protocols, protocol]);
+        }
       } else {
         // logger.d('CREATE_ACCOUNT');
-        account = Account.create(uid: user.uid);
+        account = Account.create(uid: user.uid, protocols: [protocol!]);
 
         String email = user.email ?? '';
         String display = user.displayName ?? email.split('@').first ?? '';
@@ -90,7 +104,6 @@ class AccountService {
           firstName: display,
           avatar: photoUrl,
         );
-
         await ref.set(account.toJson());
       }
       return account;
@@ -105,6 +118,34 @@ class AccountService {
       final db = FirebaseFirestore.instance;
       final ref = db.collection(Collection.accounts.name).doc(uid);
       await ref.set(data);
+      return true;
+    } catch (err, _) {
+      logger.e(err);
+      return false;
+    }
+  }
+
+  static Future<bool> addProtocol(String uid, AuthType protocol) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      final ref = db.collection(Collection.accounts.name).doc(uid);
+      await ref.update({
+        'protocols': FieldValue.arrayUnion([protocol.name])
+      });
+      return true;
+    } catch (err, _) {
+      logger.e(err);
+      return false;
+    }
+  }
+
+  static Future<bool> removeProtocol(String uid, AuthType protocol) async {
+    try {
+      final db = FirebaseFirestore.instance;
+      final ref = db.collection(Collection.accounts.name).doc(uid);
+      await ref.update({
+        'protocols': FieldValue.arrayRemove([protocol.name])
+      });
       return true;
     } catch (err, _) {
       logger.e(err);

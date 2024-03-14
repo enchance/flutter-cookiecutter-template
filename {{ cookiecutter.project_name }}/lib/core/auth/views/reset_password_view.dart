@@ -125,13 +125,13 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
       await ref.read(resetPasswordProvider.notifier).resetPassword(data['email']);
     } catch (err, _) {
       logger.e(err);
-      rethrow;
+      setState(() => onFailed = true);
     }
   }
 
   Widget buildSignIn() {
     return TextButton(
-      onPressed: () => context.goNamed('signin'),
+      onPressed: () => context.goNamed('index'),
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 7),
       ),

@@ -5,15 +5,22 @@ import 'base_theme.dart';
 
 class IndexTheme {
   static final BaseTheme _lightTheme = BaseTheme(
-    background: Colors.grey.shade100,
-    onBackground: Colors.black87,
+    brightness: Brightness.light,
     primary: const Color(0xFF62D2A5),
     secondary: const Color(0xFFffb400),
     tertiary: const Color(0xFFe8eddf),
+
+    background: Colors.grey.shade100,
+    onBackground: Colors.black87,
     surface: Colors.grey.shade800,
     onSurface: Colors.white,
   );
   static final BaseTheme _darkTheme = BaseTheme(
+    brightness: Brightness.dark,
+    primary: const Color(0xFF62D2A5),
+    secondary: const Color(0xFFffb400),
+    tertiary: const Color(0xFFe8eddf),
+
     background: Colors.grey.shade800,
     onBackground: Colors.white,
     surface: Colors.grey.shade50,
@@ -39,18 +46,7 @@ class IndexTheme {
   *                                      |___/
   * Standard
   * */
-  static ThemeData light = lt.copyWith(
-    brightness: Brightness.light,
-    // inputDecorationTheme: lt.inputDecorationTheme.copyWith(
-    //   filled: true,
-    //   fillColor: Colors.grey.shade100,
-    //   hintStyle: lt.inputDecorationTheme.hintStyle!.copyWith(
-    //     color: Colors.grey,
-    //   ),
-    //   enabledBorder: lt.inputDecorationTheme.enabledBorder!
-    //       .copyWith(borderSide: BorderSide(color: Colors.grey.shade500)),
-    // ),
-  );
+  static ThemeData light = lt.copyWith();
 
   /*
   *  ___           _             ____             _
@@ -61,27 +57,8 @@ class IndexTheme {
   *
   * */
   static ThemeData dark = dt.copyWith(
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: dtcolor.background,
-    colorScheme: dt.colorScheme.copyWith(
-      background: dtcolor.background,
-      onBackground: dtcolor.onBackground,
-      errorContainer: Colors.pink.shade200.withOpacity(0.9),
+    inputDecorationTheme: dt.inputDecorationTheme.copyWith(
+      errorStyle: TextStyle(color: Colors.pink.shade200),
     ),
-    appBarTheme: dt.appBarTheme.copyWith(
-      titleTextStyle: dt.appBarTheme.titleTextStyle!.copyWith(color: dtcolor.onBackground),
-    ),
-    // inputDecorationTheme: dt.inputDecorationTheme.copyWith(
-    //   filled: true,
-    //   fillColor: tintColor(dtcolor.background, 0.08),
-    //   hintStyle: dt.inputDecorationTheme.hintStyle!.copyWith(color: Colors.grey),
-    //   labelStyle: const TextStyle(color: Colors.white60),
-    //   enabledBorder: dt.inputDecorationTheme.enabledBorder!
-    //       .copyWith(borderSide: BorderSide(color: Colors.grey.shade500)),
-    //   errorStyle: TextStyle(color: Colors.pink.shade200),
-    //   focusedErrorBorder: UnderlineInputBorder(
-    //     borderSide: BorderSide(color: Colors.pink.shade200),
-    //   ),
-    // ),
   );
 }

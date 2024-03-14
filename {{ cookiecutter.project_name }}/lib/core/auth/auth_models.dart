@@ -17,12 +17,19 @@ class Account with _$Account {
     @Default('') final String lastName,
     @Default('') final String display,
     @Default('') final String avatar,
+    @Default([]) @AuthTypeConverter() final List<AuthType> protocols,
     @TimestampConverter() final DateTime? createdAt,
   }) = _Account;
 
   factory Account.fromJson(Map<String, Object?> json) => _$AccountFromJson(json);
 
-  factory Account.create({required String uid, Role role = defaultRole}) {
-    return Account(uid: uid, createdAt: DateTime.now(), role: role);
+  factory Account.create(
+      {required String uid, required List<AuthType> protocols, Role role = defaultRole}) {
+    return Account(
+      uid: uid,
+      createdAt: DateTime.now(),
+      role: role,
+      protocols: protocols,
+    );
   }
 }

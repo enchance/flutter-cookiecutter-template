@@ -132,7 +132,7 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
       await ref.read(authProvider.notifier).signInWithEmail(data['email'], data['password']);
     } catch (err, _) {
       logger.e(err);
-      rethrow;
+      setState(() => onFailed = true);
     }
   }
 

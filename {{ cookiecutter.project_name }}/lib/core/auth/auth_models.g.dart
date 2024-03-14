@@ -15,6 +15,9 @@ _$AccountImpl _$$AccountImplFromJson(Map<String, dynamic> json) =>
       lastName: json['lastName'] as String? ?? '',
       display: json['display'] as String? ?? '',
       avatar: json['avatar'] as String? ?? '',
+      protocols: json['protocols'] == null
+          ? const []
+          : const AuthTypeConverter().fromJson(json['protocols'] as List),
       createdAt: _$JsonConverterFromJson<Timestamp, DateTime>(
           json['createdAt'], const TimestampConverter().fromJson),
     );
@@ -28,6 +31,7 @@ Map<String, dynamic> _$$AccountImplToJson(_$AccountImpl instance) =>
       'lastName': instance.lastName,
       'display': instance.display,
       'avatar': instance.avatar,
+      'protocols': const AuthTypeConverter().toJson(instance.protocols),
       'createdAt': _$JsonConverterToJson<Timestamp, DateTime>(
           instance.createdAt, const TimestampConverter().toJson),
     };

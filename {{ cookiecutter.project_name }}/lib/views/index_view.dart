@@ -8,6 +8,8 @@ import 'package:icons_plus/icons_plus.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../core/core.dart';
+import '../components/components.dart';
+import '../core/auth/auth_components.dart';
 
 class IndexView extends ConsumerStatefulWidget {
   const IndexView({super.key});
@@ -21,6 +23,7 @@ class _IndexViewState extends ConsumerState<IndexView> {
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final authprov = ref.watch(authProvider);
+    final anonyprov = ref.watch(anonymousSignInProvider);
 
     // ref.listen(signInAnonProvider, (previous, next) {
     //   if(!next.isLoading && next.hasValue) context.goNamed('/');
@@ -52,35 +55,73 @@ class _IndexViewState extends ConsumerState<IndexView> {
                     Container(
                       width: double.infinity,
                       constraints: BoxConstraints(maxWidth: settings.maxWidth),
-                      child: ElevatedButton(
-                        onPressed: authprov.maybeWhen(
+                      child: OutlinedButton(
+                        // onPressed: null,
+                        // onPressed: () {},
+                        onPressed: anonyprov.maybeWhen(
                           loading: () => null,
-                          orElse: () => ref.read(authProvider.notifier).signInAnonymously,
+                          orElse: () => ref.read(anonymousSignInProvider.notifier).signIn,
                         ),
-                        child: authprov.maybeWhen(
-                            loading: () => SpinKitThreeBounce(
-                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.2),
-                                  size: 20,
-                                ),
+                        child: anonyprov.maybeWhen(
+                            loading: () => const ButtonLoading(),
                             orElse: () => const Text('Get started')),
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // const Text('No account yet?', style: TextStyle(color: Colors.grey)),
-                        TextButton.icon(
-                          onPressed: () => context.goNamed('auth'),
-                          icon: const Icon(Bootstrap.person_circle, color: Colors.grey, size: 20),
-                          label: const Text('Sign-in with account',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                              )),
+                    const SizedBox(height: 10),
+                    const Text('or'),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      constraints: BoxConstraints(maxWidth: settings.maxWidth),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red.shade600,
+                          foregroundColor: Colors.white,
                         ),
-                      ],
+                        onPressed: () => ref.read(authProvider.notifier).signInWithGoogle(),
+                        child: authprov.maybeWhen(
+                            loading: () => const ButtonLoading(color: Colors.white),
+                            orElse: () => const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Bootstrap.google),
+                                SizedBox(width: 10),
+                                Text('Sign-in with Google'),
+                              ],
+                            )),
+                      ),
                     ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      constraints: BoxConstraints(maxWidth: settings.maxWidth),
+                      child: ElevatedButton.icon(
+                        onPressed: () => context.goNamed('signin'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                        ),
+                        icon: const Icon(Icons.email_outlined),
+                        label: const Text('Sign-in with Email'),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const RegisterHereText(),
+                    // const SizedBox(height: 20),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     // const Text('No account yet?', style: TextStyle(color: Colors.grey)),
+                    //     TextButton.icon(
+                    //       onPressed: () => context.goNamed('auth'),
+                    //       icon: const Icon(Bootstrap.person_circle, color: Colors.grey, size: 20),
+                    //       label: const Text('Sign-in with account',
+                    //           style: TextStyle(
+                    //             fontWeight: FontWeight.bold,
+                    //             color: Colors.grey,
+                    //           )),
+                    //     ),
+                    //   ],
+                    // ),
                     // ...List.generate(50, (index) => Text(index.toString())),
                     SizedBox(height: settings.bottomGap),
                   ],
@@ -93,17 +134,17 @@ class _IndexViewState extends ConsumerState<IndexView> {
     );
   }
 
-  void signInAnon() async {
-    try {
-      ref.read(authProvider.notifier).signInAnonymously();
-    } on FirebaseAuthException catch (err) {
-      if (err.code == 'operation-not-allowed') {
-        return logger.e("Anonymous auth hasn't been enabled for this project.");
-      }
-      return logger.e('Unknown error.');
-    } catch (err) {
-      logger.e(err);
-      rethrow;
-    }
-  }
+  // void signInAnon() async {
+  //   try {
+  //     ref.read(authProvider.notifier).signInAnonymously();
+  //   } on FirebaseAuthException catch (err) {
+  //     if (err.code == 'operation-not-allowed') {
+  //       return logger.e("Anonymous auth hasn't been enabled for this project.");
+  //     }
+  //     return logger.e('Unknown error.');
+  //   } catch (err) {
+  //     logger.e(err);
+  //     rethrow;
+  //   }
+  // }
 }

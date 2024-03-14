@@ -14,7 +14,6 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../core.dart';
 import '../auth_components.dart';
 
-
 class AuthSelectionView extends ConsumerStatefulWidget {
   const AuthSelectionView({super.key});
 
@@ -29,10 +28,11 @@ class _AuthSelectionViewState extends ConsumerState<AuthSelectionView> {
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final authprov = ref.watch(authProvider);
+    final xprov = ref.watch(xSignInProvider);
 
     ref.listen(authProvider, (_, next) {
-      if(next.isLoading) return;
-      if(next.hasError) setState(() => onFailed = true);
+      if (next.isLoading) return;
+      if (next.hasError) setState(() => onFailed = true);
     });
 
     return Scaffold(
@@ -66,16 +66,38 @@ class _AuthSelectionViewState extends ConsumerState<AuthSelectionView> {
                         child: authprov.maybeWhen(
                             loading: () => const ButtonLoading(color: Colors.white),
                             orElse: () => const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Bootstrap.google),
-                                SizedBox(width: 10),
-                                Text('Google Sign-in'),
-                              ],
-                            )
-                        ),
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Bootstrap.google),
+                                    SizedBox(width: 10),
+                                    Text('Google Sign-in'),
+                                  ],
+                                )),
                       ),
                     ),
+                    // const SizedBox(height: 10),
+                    // Container(
+                    //   width: double.infinity,
+                    //   constraints: BoxConstraints(maxWidth: settings.maxWidth),
+                    //   child: ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: Colors.grey.shade800,
+                    //       foregroundColor: Colors.white,
+                    //     ),
+                    //     onPressed: () => ref.read(xSignInProvider.notifier).signInWithX(),
+                    //     child: xprov.maybeWhen(
+                    //         loading: () => const ButtonLoading(color: Colors.white),
+                    //         orElse: () => const Row(
+                    //           mainAxisAlignment: MainAxisAlignment.center,
+                    //           children: [
+                    //             Icon(Bootstrap.twitter_x),
+                    //             SizedBox(width: 10),
+                    //             Text('X Sign-in'),
+                    //           ],
+                    //         )
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 10),
                     const Text('or'),
                     const SizedBox(height: 10),

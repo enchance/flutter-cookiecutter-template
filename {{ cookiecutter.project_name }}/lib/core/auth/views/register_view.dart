@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,10 +25,10 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final authprov = ref.watch(authProvider);
-    
+
     ref.listen(authProvider, (_, next) {
-      if(next.isLoading) return;
-      if(next.hasError) setState(() => onFailed = true);
+      if (next.isLoading) return;
+      if (next.hasError) setState(() => onFailed = true);
     });
 
     return Scaffold(
@@ -52,14 +51,20 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
-                    // const MastheadPlaceholderImage(),
-                    const Icon(Bootstrap.person_circle, size: 70),
+                    Icon(
+                      Bootstrap.person_circle,
+                      size: 70,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
                     if (onFailed) ...[
                       const SizedBox(height: 20),
                       NoticeBox.error(errorMessages['ACCOUNT_EXISTS']!),
                     ],
                     const SizedBox(height: 20),
-                    Text('Register Account', style: Theme.of(context).textTheme.titleMedium,),
+                    Text(
+                      'Register Account',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                     const SizedBox(height: 20),
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: settings.maxWidth),
@@ -112,7 +117,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                           FormBuilderValidators.required(),
                           FormBuilderValidators.equal(
                             passwd ?? '',
-                            errorText: 'Passwords are not the same',
+                            errorText: 'Passwords must be the same',
                           ),
                         ]),
                         keyboardType: TextInputType.name,
@@ -154,13 +159,13 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
       await ref.read(authProvider.notifier).createUserWithEmail(data['email'], data['password']);
     } catch (err, _) {
       logger.e(err);
-      rethrow;
+      setState(() => onFailed = true);
     }
   }
 
   Widget buildSignIn() {
     return TextButton(
-      onPressed: () => context.goNamed('signin'),
+      onPressed: () => context.goNamed('index'),
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 7),
       ),

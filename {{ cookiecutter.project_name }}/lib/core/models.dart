@@ -1,8 +1,7 @@
-import 'package:cookiesrc/core/config/conf.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'enums.dart';
+import 'core.dart';
 
 part 'models.freezed.dart';
 
@@ -50,4 +49,18 @@ class RoleConverter implements JsonConverter<Role, String> {
 
   @override
   String toJson(Role role) => role.name;
+}
+
+class AuthTypeConverter implements JsonConverter<List<AuthType>, List> {
+  const AuthTypeConverter();
+
+  @override
+  List<AuthType> fromJson(List protocols) {
+    return protocols.map((item) => AuthType.values.byName(item as String)).toList();
+  }
+
+  @override
+  List toJson(List<AuthType> protocols) {
+    return protocols.map((item) => item.name).toList();
+  }
 }

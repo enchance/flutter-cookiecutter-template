@@ -17,9 +17,10 @@ import '../../firebase_options.dart';
 class StartupService {
   /// Run all setup requirements before starting the app. This is where you can make queries
   /// to firestore, auth, or any other service you might be using before the app starts
-  static Future<Account?> initialize(dynamic ref, UserCredential creds) async {
+  static Future<Account?> initAccount(dynamic ref, UserCredential creds,
+      [AuthType? protocol]) async {
     User? user = creds.user;
-    if(user == null) {
+    if (user == null) {
       ref.read(authProvider.notifier).signOut();
       logger.e('Signing out: account == null. No user.');
     }
@@ -40,7 +41,11 @@ class StartupService {
 
       // Check online instead of this way
       String photoUrl = creds.additionalUserInfo?.profile?['picture'] ?? '';
-      Account? account = await AccountService.getAndCreate(user: user!, photoUrl: photoUrl);
+      Account? account = await AccountService.getAndCreate(
+        user: user!,
+        photoUrl: photoUrl,
+        protocol: protocol,
+      );
       // ref.read(devLogProvider.notifier).log('[ACCOUNT_FETCH]', roundoff(stopwatch));
       if (account == null) {
         ref.read(authProvider.notifier).signOut();
@@ -61,7 +66,6 @@ class StartupService {
       // logger.d(ref.watch(devLogProvider).logs);
 
       return account;
-
     } catch (err, _) {
       logger.e(err);
       return null;

@@ -28,6 +28,8 @@ mixin _$Account {
   String get lastName => throw _privateConstructorUsedError;
   String get display => throw _privateConstructorUsedError;
   String get avatar => throw _privateConstructorUsedError;
+  @AuthTypeConverter()
+  List<AuthType> get protocols => throw _privateConstructorUsedError;
   @TimestampConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
@@ -49,6 +51,7 @@ abstract class $AccountCopyWith<$Res> {
       String lastName,
       String display,
       String avatar,
+      @AuthTypeConverter() List<AuthType> protocols,
       @TimestampConverter() DateTime? createdAt});
 }
 
@@ -72,6 +75,7 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
     Object? lastName = null,
     Object? display = null,
     Object? avatar = null,
+    Object? protocols = null,
     Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -103,6 +107,10 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
               as String,
+      protocols: null == protocols
+          ? _value.protocols
+          : protocols // ignore: cast_nullable_to_non_nullable
+              as List<AuthType>,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -126,6 +134,7 @@ abstract class _$$AccountImplCopyWith<$Res> implements $AccountCopyWith<$Res> {
       String lastName,
       String display,
       String avatar,
+      @AuthTypeConverter() List<AuthType> protocols,
       @TimestampConverter() DateTime? createdAt});
 }
 
@@ -147,6 +156,7 @@ class __$$AccountImplCopyWithImpl<$Res>
     Object? lastName = null,
     Object? display = null,
     Object? avatar = null,
+    Object? protocols = null,
     Object? createdAt = freezed,
   }) {
     return _then(_$AccountImpl(
@@ -178,6 +188,10 @@ class __$$AccountImplCopyWithImpl<$Res>
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
               as String,
+      protocols: null == protocols
+          ? _value._protocols
+          : protocols // ignore: cast_nullable_to_non_nullable
+              as List<AuthType>,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -197,7 +211,9 @@ class _$AccountImpl implements _Account {
       this.lastName = '',
       this.display = '',
       this.avatar = '',
-      @TimestampConverter() this.createdAt});
+      @AuthTypeConverter() final List<AuthType> protocols = const [],
+      @TimestampConverter() this.createdAt})
+      : _protocols = protocols;
 
   factory _$AccountImpl.fromJson(Map<String, dynamic> json) =>
       _$$AccountImplFromJson(json);
@@ -222,13 +238,23 @@ class _$AccountImpl implements _Account {
   @override
   @JsonKey()
   final String avatar;
+  final List<AuthType> _protocols;
+  @override
+  @JsonKey()
+  @AuthTypeConverter()
+  List<AuthType> get protocols {
+    if (_protocols is EqualUnmodifiableListView) return _protocols;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_protocols);
+  }
+
   @override
   @TimestampConverter()
   final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'Account(uid: $uid, role: $role, email: $email, firstName: $firstName, lastName: $lastName, display: $display, avatar: $avatar, createdAt: $createdAt)';
+    return 'Account(uid: $uid, role: $role, email: $email, firstName: $firstName, lastName: $lastName, display: $display, avatar: $avatar, protocols: $protocols, createdAt: $createdAt)';
   }
 
   @override
@@ -245,14 +271,25 @@ class _$AccountImpl implements _Account {
                 other.lastName == lastName) &&
             (identical(other.display, display) || other.display == display) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
+            const DeepCollectionEquality()
+                .equals(other._protocols, _protocols) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, uid, role, email, firstName,
-      lastName, display, avatar, createdAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      uid,
+      role,
+      email,
+      firstName,
+      lastName,
+      display,
+      avatar,
+      const DeepCollectionEquality().hash(_protocols),
+      createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -277,6 +314,7 @@ abstract class _Account implements Account {
       final String lastName,
       final String display,
       final String avatar,
+      @AuthTypeConverter() final List<AuthType> protocols,
       @TimestampConverter() final DateTime? createdAt}) = _$AccountImpl;
 
   factory _Account.fromJson(Map<String, dynamic> json) = _$AccountImpl.fromJson;
@@ -296,6 +334,9 @@ abstract class _Account implements Account {
   String get display;
   @override
   String get avatar;
+  @override
+  @AuthTypeConverter()
+  List<AuthType> get protocols;
   @override
   @TimestampConverter()
   DateTime? get createdAt;

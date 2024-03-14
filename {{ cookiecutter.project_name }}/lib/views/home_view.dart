@@ -25,7 +25,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
     ref.listen(authProvider, (previous, next) {
       if (!next.isLoading) {
-        if (next.hasValue) logger.d(next.valueOrNull);
+        // if (next.hasValue) logger.d(next.valueOrNull);
         if (next.hasError) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Unable to link your account'),
@@ -33,6 +33,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         }
       }
     });
+    // logger.d(account);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,17 +50,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (user.isAnonymous)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => ref.read(authProvider.notifier).linkGoogleAccount(user),
-                  child: authprov.maybeWhen(
-                    loading: () => const ButtonLoading(),
-                    orElse: () => const Text('Google Sign-in'),
-                  ),
-                ),
-              ),
             if (!user.isAnonymous) ...[
               Container(
                 decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
@@ -68,18 +58,36 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 child: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 52,
-                    child: account!.avatar.isNotEmpty
+                    child: account?.avatar.isNotEmpty ?? false
                         ? CircleAvatar(
                             // backgroundColor: Colors.grey,
                             radius: 50,
-                            backgroundImage: CachedNetworkImageProvider(account.avatar),
+                            backgroundImage: CachedNetworkImageProvider(account!.avatar),
                           )
                         : const Icon(Bootstrap.person_circle, size: 100, color: Colors.grey)),
               ),
               const SizedBox(height: 10),
-              Text(account.display),
-              Text(account.email),
-            ]
+              if (account != null) ...[
+                Text(account.display),
+                Text(account.email),
+              ],
+            ],
+            if (user.isAnonymous || !account!.protocols.contains(AuthType.google)) ...[
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: authprov.maybeWhen(
+                    loading: () => null,
+                    orElse: () => () => ref.read(authProvider.notifier).linkGoogleAccount(user),
+                  ),
+                  child: authprov.maybeWhen(
+                    loading: () => const ButtonLoading(),
+                    orElse: () => const Text('Activate Google Sign-in'),
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),

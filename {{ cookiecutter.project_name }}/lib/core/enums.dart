@@ -2,6 +2,6 @@ enum Collection { accounts }
 
 enum Role { admin, staff, common }
 
-enum AuthProtocol { anonymous, google, facebook }
+enum AuthType { anonymous, google, x, email }
 
 enum FontSizes { sm, md, lg }
