@@ -1,11 +1,7 @@
-import 'package:cookiesrc/core/themes/base_theme.dart';
-import 'package:cookiesrc/core/themes/themes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icons_plus/icons_plus.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../core/core.dart';
 import '../components/components.dart';
@@ -19,15 +15,23 @@ class IndexView extends ConsumerStatefulWidget {
 }
 
 class _IndexViewState extends ConsumerState<IndexView> {
+  bool onFailed = false;
+
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
     final authprov = ref.watch(authProvider);
     final anonyprov = ref.watch(anonymousSignInProvider);
 
-    // ref.listen(signInAnonProvider, (previous, next) {
-    //   if(!next.isLoading && next.hasValue) context.goNamed('/');
-    // });
+    ref.listen(anonymousSignInProvider, (_, next) {
+      if (next.isLoading) return;
+      if (next.hasError) setState(() => onFailed = true);
+    });
+
+    ref.listen(authProvider, (_, next) {
+      if (next.isLoading) return;
+      if (next.hasError) setState(() => onFailed = true);
+    });
 
     return Scaffold(
       body: SafeArea(
@@ -51,6 +55,10 @@ class _IndexViewState extends ConsumerState<IndexView> {
                       style: Theme.of(context).textTheme.displayMedium,
                       textAlign: TextAlign.center,
                     ),
+                    if (onFailed) ...[
+                      const SizedBox(height: 20),
+                      NoticeBox.error(errorMessages['FAILED_SIGNIN']!),
+                    ],
                     const SizedBox(height: 20),
                     Container(
                       width: double.infinity,
@@ -78,9 +86,12 @@ class _IndexViewState extends ConsumerState<IndexView> {
                           backgroundColor: Colors.red.shade600,
                           foregroundColor: Colors.white,
                         ),
-                        onPressed: () => ref.read(authProvider.notifier).signInWithGoogle(),
+                        onPressed: authprov.maybeWhen(
+                          loading: () => null,
+                          orElse: () => ref.read(authProvider.notifier).signInWithGoogle,
+                        ),
                         child: authprov.maybeWhen(
-                            loading: () => const ButtonLoading(color: Colors.white),
+                            loading: () => const ButtonLoading(),
                             orElse: () => const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -133,18 +144,4 @@ class _IndexViewState extends ConsumerState<IndexView> {
       ),
     );
   }
-
-  // void signInAnon() async {
-  //   try {
-  //     ref.read(authProvider.notifier).signInAnonymously();
-  //   } on FirebaseAuthException catch (err) {
-  //     if (err.code == 'operation-not-allowed') {
-  //       return logger.e("Anonymous auth hasn't been enabled for this project.");
-  //     }
-  //     return logger.e('Unknown error.');
-  //   } catch (err) {
-  //     logger.e(err);
-  //     rethrow;
-  //   }
-  // }
 }

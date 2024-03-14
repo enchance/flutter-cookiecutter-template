@@ -34,11 +34,6 @@ GoRouter routes(RoutesRef ref) {
       },
       routes: [
         GoRoute(
-          path: '/',
-          name: 'home',
-          builder: (_, state) => const HomeView(),
-        ),
-        GoRoute(
           path: '/index',
           name: 'index',
           builder: (_, state) => const IndexView(),
@@ -67,9 +62,14 @@ GoRouter routes(RoutesRef ref) {
           ],
         ),
         GoRoute(
-          path: '/startup',
-          name: 'startup',
-          builder: (_, state) => const StartupView(),
+          path: '/',
+          name: 'home',
+          builder: (_, state) => const HomeView(),
         ),
+        // GoRoute(
+        //   path: '/startup',
+        //   name: 'startup',
+        //   builder: (_, state) => const StartupView(),
+        // ),
       ]);
 }

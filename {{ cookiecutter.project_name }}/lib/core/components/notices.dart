@@ -42,7 +42,7 @@ class NoticeBox extends ConsumerWidget {
   })  : fill = Colors.pink.shade50,
         border = Colors.pink.shade100,
         style = TextStyle(color: Colors.pink.shade300),
-        icon = Icon(Bootstrap.emoji_surprise, size: 20, color: Colors.pink.shade300);
+        icon = Icon(Bootstrap.emoji_frown, size: 20, color: Colors.pink.shade300);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

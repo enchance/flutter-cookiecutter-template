@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -6,8 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../core.dart';
@@ -64,8 +61,8 @@ class StartupService {
       // Success
       ref.read(startupCompleteProvider.notifier).update((state) => true);
       // logger.d(ref.watch(devLogProvider).logs);
-
       return account;
+
     } catch (err, _) {
       logger.e(err);
       return null;

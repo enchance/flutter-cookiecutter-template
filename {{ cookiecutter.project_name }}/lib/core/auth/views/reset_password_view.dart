@@ -60,6 +60,11 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                 children: [
                   const SizedBox(height: 20),
                   const MastheadPlaceholderImage(),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Reset Password',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                   if (onFailed) ...[
                     const SizedBox(height: 20),
                     NoticeBox.error(errorMessages['FAILED_RESET_PASSWORD']!),
@@ -68,11 +73,6 @@ class _ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
                     const SizedBox(height: 20),
                     NoticeBox.success(successMessages['RESET_LINK_SENT']!),
                   ],
-                  const SizedBox(height: 20),
-                  Text(
-                    'Reset Password',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
                   const SizedBox(height: 20),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: settings.maxWidth),

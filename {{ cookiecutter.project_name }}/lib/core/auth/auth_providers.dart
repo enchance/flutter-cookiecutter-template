@@ -1,11 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:twitter_login/entity/auth_result.dart';
-import 'package:twitter_login/twitter_login.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../core.dart';
 
@@ -61,7 +57,6 @@ class Auth extends _$Auth {
         avatar: userCreds.additionalUserInfo?.profile?['picture'] ?? '',
         protocols: [...account.protocols, AuthType.google],
       );
-      logger.d(account);
       await AccountService.save(account.uid, account.toJson());
       ref.read(userAccountProvider.notifier).save(account);
       return account;
@@ -85,22 +80,6 @@ class Auth extends _$Auth {
 
       // Startup
       Account? account = await StartupService.initAccount(ref, creds, AuthType.google);
-      return account;
-    });
-  }
-
-  Future<void> signInWithEmail(String email, String password) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final creds = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      final user = creds.user;
-      if (user == null) return null;
-
-      // Startup
-      Account? account = await StartupService.initAccount(ref, creds);
       return account;
     });
   }
@@ -146,6 +125,27 @@ class Auth extends _$Auth {
   }
 }
 
+@riverpod
+class EmailSignIn extends _$EmailSignIn {
+  @override
+  FutureOr<Account?> build() async => null;
+
+  Future<void> signIn(String email, String password) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final creds = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      final user = creds.user;
+      if (user == null) return null;
+
+      // Startup
+      Account? account = await StartupService.initAccount(ref, creds);
+      return account;
+    });
+  }
+}
 
 @riverpod
 class AnonymousSignIn extends _$AnonymousSignIn {
@@ -153,21 +153,15 @@ class AnonymousSignIn extends _$AnonymousSignIn {
   FutureOr<Account?> build() async => null;
 
   Future<void> signIn() async {
-    try {
-      state = const AsyncLoading();
-      state = await AsyncValue.guard(() async {
-        // await Future.delayed(const Duration(seconds: 9999));
-        final creds = await FirebaseAuth.instance.signInAnonymously();
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      // await Future.delayed(const Duration(seconds: 9999));
+      final creds = await FirebaseAuth.instance.signInAnonymously();
 
-        // Startup here
-        Account? account = await StartupService.initAccount(ref, creds, AuthType.anonymous);
-        return account;
-      });
-    } on StateError catch (err) {
-      logger.d(err);
-    } catch (err, _) {
-      rethrow;
-    }
+      // Startup here
+      Account? account = await StartupService.initAccount(ref, creds, AuthType.anonymous);
+      return account;
+    });
   }
 }
 
@@ -176,37 +170,37 @@ class xSignIn extends _$xSignIn {
   @override
   FutureOr<Account?> build() async => null;
 
-  // Future<void> signInWithX() async {
-  //   state = const AsyncLoading();
-  //   state = await AsyncValue.guard(() async {
-  //     final xLogin = TwitterLogin(
-  //       apiKey: dotenv.env['X_API_KEY']!,
-  //       apiSecretKey: dotenv.env['X_SECRET']!,
-  //       redirectURI: dotenv.env['X_REDIRECT_URL']!,
-  //     );
-  //     final AuthResult auth = await xLogin.login();
-  //
-  //     switch (auth.status) {
-  //       case TwitterLoginStatus.loggedIn:
-  //         final authCreds = TwitterAuthProvider.credential(
-  //           accessToken: auth.authToken!,
-  //           secret: auth.authTokenSecret!,
-  //         );
-  //         final creds = await FirebaseAuth.instance.signInWithCredential(authCreds);
-  //         final user = creds.user;
-  //         if (user == null) return null;
-  //
-  //         // Startup
-  //         Account? account = await StartupService.initAccount(ref, creds, AuthType.x);
-  //         return account;
-  //         break;
-  //       // case TwitterLoginStatus.cancelledByUser:
-  //       //   break;
-  //       default:
-  //         return null;
-  //     }
-  //   });
-  // }
+// Future<void> signInWithX() async {
+//   state = const AsyncLoading();
+//   state = await AsyncValue.guard(() async {
+//     final xLogin = TwitterLogin(
+//       apiKey: dotenv.env['X_API_KEY']!,
+//       apiSecretKey: dotenv.env['X_SECRET']!,
+//       redirectURI: dotenv.env['X_REDIRECT_URL']!,
+//     );
+//     final AuthResult auth = await xLogin.login();
+//
+//     switch (auth.status) {
+//       case TwitterLoginStatus.loggedIn:
+//         final authCreds = TwitterAuthProvider.credential(
+//           accessToken: auth.authToken!,
+//           secret: auth.authTokenSecret!,
+//         );
+//         final creds = await FirebaseAuth.instance.signInWithCredential(authCreds);
+//         final user = creds.user;
+//         if (user == null) return null;
+//
+//         // Startup
+//         Account? account = await StartupService.initAccount(ref, creds, AuthType.x);
+//         return account;
+//         break;
+//       // case TwitterLoginStatus.cancelledByUser:
+//       //   break;
+//       default:
+//         return null;
+//     }
+//   });
+// }
 }
 
 @riverpod

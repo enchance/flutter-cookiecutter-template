@@ -48,7 +48,7 @@ final userAccountProvider = NotifierProvider<UserAccount, Account?>.internal(
 );
 
 typedef _$UserAccount = Notifier<Account?>;
-String _$authHash() => r'415fa0b9ddb5d481c28e52d7bfa9321276590c7a';
+String _$authHash() => r'1f46ca9e0ec92466fe41e2af439111be1844e9f0';
 
 /// See also [Auth].
 @ProviderFor(Auth)
@@ -62,7 +62,22 @@ final authProvider = AutoDisposeAsyncNotifierProvider<Auth, Account?>.internal(
 );
 
 typedef _$Auth = AutoDisposeAsyncNotifier<Account?>;
-String _$anonymousSignInHash() => r'a7d9f98e977d47b6d92ee61cd2568edf1292b451';
+String _$emailSignInHash() => r'ccaff9db6fcbfecd231bc82953a5ba560580ef49';
+
+/// See also [EmailSignIn].
+@ProviderFor(EmailSignIn)
+final emailSignInProvider =
+    AutoDisposeAsyncNotifierProvider<EmailSignIn, Account?>.internal(
+  EmailSignIn.new,
+  name: r'emailSignInProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$emailSignInHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$EmailSignIn = AutoDisposeAsyncNotifier<Account?>;
+String _$anonymousSignInHash() => r'd0b3a40de04671df1286e927afbbaa549dc5c87e';
 
 /// See also [AnonymousSignIn].
 @ProviderFor(AnonymousSignIn)

@@ -56,15 +56,15 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                       size: 70,
                       color: Theme.of(context).colorScheme.onBackground,
                     ),
-                    if (onFailed) ...[
-                      const SizedBox(height: 20),
-                      NoticeBox.error(errorMessages['ACCOUNT_EXISTS']!),
-                    ],
                     const SizedBox(height: 20),
                     Text(
                       'Register Account',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
+                    if (onFailed) ...[
+                      const SizedBox(height: 20),
+                      NoticeBox.error(errorMessages['ACCOUNT_EXISTS']!),
+                    ],
                     const SizedBox(height: 20),
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: settings.maxWidth),

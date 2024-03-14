@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -24,9 +23,9 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
   @override
   Widget build(BuildContext context) {
     final settings = ref.watch(settingsProvider);
-    final authprov = ref.watch(authProvider);
+    final emailprov = ref.watch(emailSignInProvider);
 
-    ref.listen(authProvider, (_, next) {
+    ref.listen(emailSignInProvider, (_, next) {
       if (next.isLoading) return;
       if (next.hasError) setState(() => onFailed = true);
     });
@@ -50,12 +49,12 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
                 children: [
                   const SizedBox(height: 20),
                   const MastheadPlaceholderImage(),
+                  const SizedBox(height: 20),
+                  Text('Sign-in', style: Theme.of(context).textTheme.titleMedium),
                   if (onFailed) ...[
                     const SizedBox(height: 20),
                     NoticeBox.error(errorMessages['INCORRECT_PASSWORD']!),
                   ],
-                  const SizedBox(height: 20),
-                  Text('Sign-in', style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 20),
                   ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: settings.maxWidth),
@@ -99,11 +98,11 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
                     width: double.infinity,
                     constraints: BoxConstraints(maxWidth: settings.maxWidth),
                     child: ElevatedButton(
-                      onPressed: authprov.maybeWhen(
+                      onPressed: emailprov.maybeWhen(
                         loading: () => null,
                         orElse: () => onSubmit,
                       ),
-                      child: authprov.maybeWhen(
+                      child: emailprov.maybeWhen(
                         loading: () => const ButtonLoading(),
                         orElse: () => const Text('Sign-in'),
                       ),
@@ -129,7 +128,7 @@ class _SigninViewState extends ConsumerState<EmailSignInView> {
       if (!form.saveAndValidate()) return;
 
       final data = form.value;
-      await ref.read(authProvider.notifier).signInWithEmail(data['email'], data['password']);
+      ref.read(emailSignInProvider.notifier).signIn(data['email'], data['password']);
     } catch (err, _) {
       logger.e(err);
       setState(() => onFailed = true);

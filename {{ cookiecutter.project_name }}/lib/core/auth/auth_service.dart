@@ -81,13 +81,7 @@ class AccountService {
       Account account;
       if (refget.exists) {
         // logger.d('EXISTS');
-        try {
-          account = Account.fromJson(refget.data() as Map<String, dynamic>);
-          logger.d(account);
-        } catch (err, _) {
-          logger.e(err);
-          rethrow;
-        }
+        account = Account.fromJson(refget.data() as Map<String, dynamic>);
         if (protocol != null && !account.protocols.contains(protocol)) {
           await AccountService.addProtocol(account.uid, protocol);
           account = account.copyWith(protocols: [...account.protocols, protocol]);

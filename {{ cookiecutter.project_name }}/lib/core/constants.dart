@@ -6,7 +6,7 @@ const errorMessages = {
 Try again in a few seconds.
 ''',
   'INCORRECT_PASSWORD': 'Is the password correct? Try typing slower.',
-  'FAILED_GOOGLE_SIGNIN': 'Unable to sign you in. Try again in a few seconds.',
+  'FAILED_SIGNIN': 'Unable to sign you in. Try again in a few seconds.',
   'FAILED_RESET_PASSWORD': 'Unable to reset your password. Try again in a few seconds.',
 };
 
