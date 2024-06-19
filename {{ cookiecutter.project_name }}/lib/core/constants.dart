@@ -1,15 +1,48 @@
+import 'package:logger/logger.dart';
 
+import 'enums.dart';
 
-const errorMessages = {
-  'ACCOUNT_EXISTS': '''
-**Unable to create your account.** It may already exist or something isn't working right. 
-Try again in a few seconds.
-''',
-  'INCORRECT_PASSWORD': 'Is the password correct? Try typing slower.',
-  'FAILED_SIGNIN': 'Unable to sign you in. Try again in a few seconds.',
-  'FAILED_RESET_PASSWORD': 'Unable to reset your password. Try again in a few seconds.',
-};
+final logger = Logger(printer: PrettyPrinter());
 
-const successMessages = {
-  'RESET_LINK_SENT': 'A reset link has been sent to your email.'
-};
+const defaultRole = Role.starter;
+
+const defaultDarkMode = false;
+const defaultGridSize = GridSize.large;
+const defaultTextSize = TextSize.medium;
+const defaultFetchCount = 10;
+
+const opacity1 = 0.5;
+const opacity2 = 0.3;
+
+// Development
+const devemail = 'devteam123@proton.me';
+const devpass = 'pass123';
+
+// class DevLogModel with _$DevLogModel {
+//   const factory DevLogModel({
+//     @Default([]) List<String> logs,
+//   }) = _DevLogModel;
+//
+//   factory DevLogModel.fromJson(Map<String, Object?> json) => _$DevLogModelFromJson(json);
+// }
+
+// @freezed
+
+// @Riverpod(keepAlive: true)
+// InternetConnectionChecker internetConnectionChecker(InternetConnectionCheckerRef ref) {
+//   return InternetConnectionChecker();
+//   // return InternetConnectionChecker.createInstance(
+//   //   checkTimeout: const Duration(seconds: 5),
+//   //   checkInterval: const Duration(minutes: 1),
+//   // );
+// }
+
+// @Riverpod(keepAlive: true)
+// class DevLog extends _$DevLog {
+//   @override
+//   DevLogModel build() => const DevLogModel();
+//
+//   void add(String message) => state = state.copyWith(logs: [...state.logs, message]);
+//
+//   void clear() => state = const DevLogModel();
+// }

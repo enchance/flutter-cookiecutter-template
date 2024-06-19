@@ -1,9 +1,10 @@
 {
     "project_name": "myproject",
     "organization": "com.jimbonglabs",
+    "package_name": "{{ cookiecutter.organization.lower() }}.{{ cookiecutter.project_name.lower().replace(' ', '') }}",
     "author": "enchance",
     "email": "{{ cookiecutter.author }}@gmail.com",
-    "country": "PH",
+    "allow_anonymous": true,
     "enable_google_signin": true,
     "_jinja2_env_vars": {"lstrip_blocks": true, "trim_blocks": true}
 }

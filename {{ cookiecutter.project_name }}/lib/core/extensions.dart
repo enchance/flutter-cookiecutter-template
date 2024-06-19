@@ -1,13 +1,9 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:slugify/slugify.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
-
-import 'utils.dart';
-import 'globals.dart';
-import 'config/config.dart';
 
 extension StringExtension on String {
   /// Capitalize the first character
@@ -24,9 +20,7 @@ extension StringExtension on String {
   }
 
   /// Slugify the string
-  String toSlug() {
-    return slugify(this);
-  }
+  String slug() => slugify(this);
 
   Map<String, dynamic> decodeJson() {
     if (isEmpty) return {};
@@ -38,14 +32,14 @@ extension StringExtension on String {
     }
   }
 
-  Timestamp? decodeToTimestamp() {
+  Timestamp? toTimestamp() {
     DateTime? dt = DateTime.tryParse(this);
     if (dt == null) return null;
     Timestamp ts = Timestamp.fromDate(dt);
     return ts;
   }
 
-  DateTime? decodeToDateTime() {
+  DateTime? toDateTime() {
     DateTime? dt = DateTime.tryParse(this);
     return dt;
   }
@@ -69,39 +63,44 @@ extension MapExtension on Map {
   Map<Symbol, dynamic> symbolizeKeys() {
     return map((k, v) => MapEntry(Symbol(k), v));
   }
+
+  Map<String, dynamic> sortByValue() {
+    return SplayTreeMap<String, dynamic>.from(this, (k1, k2) => this[k1].compareTo(this[k2]));
+  }
+
+  Map<String, dynamic> sortByKey() {
+    return SplayTreeMap<String, dynamic>.from(this, (k1, k2) => k1.compareTo(k2));
+  }
+
+  Map<String, dynamic> filterByKey(String partialString) {
+    String text = partialString.toLowerCase();
+    return Map.fromEntries(entries
+        .where((entry) => entry.key.toLowerCase().contains(text))
+        .map((entry) => MapEntry<String, dynamic>(entry.key, entry.value))
+        .toList());
+  }
+
+  Map<String, dynamic> filterByValue(String partialString) {
+    String text = partialString.toLowerCase();
+    return Map.fromEntries(entries
+        .where((entry) => entry.value.toLowerCase().contains(text))
+        .map((entry) => MapEntry<String, dynamic>(entry.key, entry.value))
+        .toList());
+  }
 }
 
 extension DateTimeExtension on DateTime {
   DateTime dateOnly() => DateTime(year, month, day);
 
+  DateTime minutesOnly() => DateTime(year, month, day, hour, minute);
+
+  DateTime hoursOnly() => DateTime(year, month, day, hour);
+
   String formatStr(String format) => DateFormat(format).format(this);
-}
 
-extension PrefExt on SharedPreferences {
-  /// Get the value of [setting] or use [val] if it doesn't exist.
-  /// If [val] is used then it is saved as the new value of [setting].
-  Future<T> getAndSave<T>(Setting setting, T val) async {
-    String key = setting.name;
-    if (containsKey(key)) return get(key)! as T;
+  /// Check if a date is today.
+  bool isToday(DateTime dt) => difference(dt).inDays == 0;
 
-    switch (T) {
-      case const (String):
-        await setString(key, val as String);
-        return val;
-      case const (int):
-        await setInt(key, val as int);
-        return val;
-      case const (double):
-        await setDouble(key, val as double);
-        return val;
-      case const (bool):
-        await setBool(key, val as bool);
-        return val;
-      case const (List<String>):
-        await setStringList(key, val as List<String>);
-        return val;
-      default:
-        throw Exception('Wrong data type to save to prefs');
-    }
-  }
+  /// Check if a date is tomorrow.
+  bool isTomorrow(DateTime dt) => difference(dt).inDays == 1;
 }

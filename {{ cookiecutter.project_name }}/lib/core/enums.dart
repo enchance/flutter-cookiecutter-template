@@ -1,7 +1,13 @@
-enum Collection { accounts }
+enum Flavor { main, development }
 
-enum Role { admin, staff, common }
+enum Role { starter, moderator, admin }
 
-enum AuthType { anonymous, google, x, email }
+enum GridSize { small, medium, large }
 
-enum FontSizes { sm, md, lg }
+enum TextSize { small, medium, large, xlarge }
+
+enum C8n { accounts }
+
+enum AuthType { anonymous, google, x, email, unknown }
+
+enum ActionStatus { loading, success, fail, none }

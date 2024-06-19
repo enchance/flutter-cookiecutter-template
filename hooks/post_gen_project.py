@@ -5,17 +5,25 @@ from pathlib import Path
 
 dependencies = {
     'auth': '''
-flutter pub add purchases_flutter firebase_core firebase_app_check firebase_auth \
-    cloud_firestore firebase_storage cloud_functions google_sign_in
+flutter pub add firebase_core firebase_auth firebase_app_check \
+    cloud_firestore cloud_functions firebase_storage firebase_analytics \
+    firebase_remote_config firebase_crashlytics \
+    google_sign_in purchases_flutter
 ''',
-    'main': '''
-flutter pub add flutter_dotenv go_router dio logger flutter_native_splash dev:flutter_launcher_icons slugify \
-    shared_preferences flutter_secure_storage settings_ui infinite_scroll_pagination flutter_markdown \
-    flutter_riverpod riverpod_annotation dev:riverpod_generator dev:build_runner dev:custom_lint dev:riverpod_lint \
-    freezed_annotation dev:freezed json_annotation dev:json_serializable \
-    flutter_form_builder form_builder_validators responsive_framework cached_network_image \
-    icons_plus google_fonts lottie flutter_spinkit \
-    internet_connection_checker visibility_detector
+    'primary': '''
+flutter pub add flutter_dotenv go_router dio slugify uuid intl logger \
+    freezed freezed_annotation json_serializable json_annotation \
+    flutter_riverpod riverpod_annotation dev:riverpod_lint \
+    dev:riverpod_generator dev:build_runner \
+    shared_preferences flutter_secure_storage settings_ui \
+    cached_network_image flutter_form_builder form_builder_validators \
+    responsive_framework infinite_scroll_pagination image_picker
+''',
+    'secondary': '''
+flutter pub add icons_plus google_fonts flutter_spinkit shimmer dev:test \
+    flutter_markdown permission_handler dev:flutter_launcher_icons \
+    dev:custom_lint package_info_plus flutter_native_splash url_launcher \
+    introduction_screen loading_animation_widget
 ''',
 }
 
@@ -62,17 +70,28 @@ def main():
     subprocess.run(f'flutter create --org {organization} {project_name}'.split())
 
     os.chdir(project_name)
+
+    {% if cookiecutter.enable_google_signin %}
     subprocess.run('flutterfire configure'.split())
+    {% endif %}
+
     subprocess.run(dependencies.get('auth').split())
-    subprocess.run(dependencies.get('main').split())
+    subprocess.run(dependencies.get('primary').split())
+    subprocess.run(dependencies.get('secondary').split())
     os.chdir('..')
+
+    testdir = os.path.join(project_name, 'test')
+    os.rename(os.path.join(testdir, 'widget_test.dart'), os.path.join(testdir, 'widget.dart'))
 
     move_files_to_lib(project_name)
 
     print('-----------------------------------------')
     print('[SUCCESS] Next steps:')
-    print('- Set minSdkVersion to 29 in android/app/build.gradle')
-    print('- Enable android:usesCleartextTraffic="true" in android/app/src/debug/AndroidManifest.xml')
+    print('1. Set minSdkVersion to 29 in /android/app/build.gradle')
+    print('2. Define flavors in /android/app/build.gradle: https://docs.flutter.dev/deployment/flavors')
+    print('3. Firebase setup: https://firebase.google.com/docs/flutter/setup?platform=android')
+    print('4. AppCheck setup: https://docs.flutter.dev/deployment/android#sign-the-app')
+    print('5. Enable android:usesCleartextTraffic="true" in android/app/src/debug/AndroidManifest.xml')
     # print(type('{{ cookiecutter.enable_google_signin }}' == 'True'),
     #       '{{ cookiecutter.enable_google_signin }}' == 'True')
 
