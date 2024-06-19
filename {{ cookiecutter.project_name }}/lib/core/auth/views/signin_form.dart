@@ -117,9 +117,7 @@ class _EmailSigninFormState extends ConsumerState<EmailSignInForm> {
                       child: Wrap(
                         children: [
                           const SizedBox(width: 20),
-                          Text('Register account',
-                              style: TextStyle(
-                                  color: theme.colorScheme.onSurface.withOpacity(opacity1))),
+                          const Text('Register account'),
                           Icon(Icons.arrow_right,
                               color: theme.colorScheme.onSurface.withOpacity(opacity1)),
                         ],
@@ -128,10 +126,7 @@ class _EmailSigninFormState extends ConsumerState<EmailSignInForm> {
                     const SizedBox(height: 10),
                     TextButton(
                       onPressed: () => context.goNamed('resetpass'),
-                      child: Text(
-                        'Lost password',
-                        style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(opacity1)),
-                      ),
+                      child: const Text('Lost password'),
                     ),
                     SizedBox(height: settings.bottomGap),
                   ],

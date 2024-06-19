@@ -9,7 +9,7 @@ main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await sharedMain(
-    flavor: Flavor.main,
+    flavor: Flavor.prod,
     title: '{{ cookiecutter.project_name | capitalize }}',
     appName: '{{ cookiecutter.project_name | lower }}',
   );

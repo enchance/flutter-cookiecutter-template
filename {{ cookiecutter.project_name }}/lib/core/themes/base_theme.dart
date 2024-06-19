@@ -178,10 +178,10 @@ class BaseTheme {
         ),
         textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
+            foregroundColor: WidgetStatePropertyAll<Color>(onSurface.withOpacity(0.5)),
             textStyle: WidgetStatePropertyAll<TextStyle>(TextStyle(
               fontSize: bodyMediumFontSize,
               fontWeight: FontWeight.bold,
-              color: onSurface,
             )),
           ),
         ),

@@ -95,13 +95,16 @@ class GoogleLinkAccountButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authpending = ref.watch(authPendingProvider);
 
-    return ElevatedLoadingButton(
-      text: 'Link Google Account',
-      onPressed: () => ref.read(authProvider.notifier).linkAccount(context),
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.white,
-      loading: authpending == 'linkGoogle',
-      icon: const Icon(Bootstrap.google),
+    return SizedBox(
+      width: 250,
+      child: ElevatedLoadingButton(
+        text: 'Link Google Account',
+        onPressed: () => ref.read(authProvider.notifier).linkAccount(context),
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        loading: authpending == 'linkGoogle',
+        icon: const Icon(Bootstrap.google, size: 20),
+      ),
     );
   }
 }

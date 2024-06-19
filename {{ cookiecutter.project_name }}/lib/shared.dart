@@ -35,9 +35,9 @@ Future<void> sharedMain({
     FlutterNativeSplash.remove();
     runApp(ProviderScope(
       overrides: [
+        useEmulatorProvider.overrideWith((_) => useEmulator),
         prefsProvider.overrideWithValue(prefs),
         packageInfoProvider.overrideWithValue(packageInfo),
-        useEmulatorProvider.overrideWith((_) => useEmulator),
         settingsProvider.overrideWithValue(settings),
         appConfigProvider.overrideWith(() => AppConfig()),
       ],

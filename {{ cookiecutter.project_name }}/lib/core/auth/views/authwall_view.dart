@@ -240,16 +240,16 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
             child: Wrap(
               children: [
                 const SizedBox(width: 20),
-                Text('Register',
-                    style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(opacity1))),
+                const Text('Register'),
                 Icon(Icons.arrow_right, color: theme.colorScheme.onSurface.withOpacity(opacity1)),
               ],
             ),
           ),
         ],
         const SizedBox(height: 5),
-          TextButton(
-          onPressed: authpending != 'google' && authpending != 'email' ? () async {
+        TextButton(
+          onPressed: authpending != 'google' && authpending != 'email'
+              ? () async {
                   final prefs = ref.watch(prefsProvider);
 
                   await Future.wait([
@@ -259,16 +259,16 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
                   ]);
                 }
               : null,
-          style:
-              TextButton.styleFrom(foregroundColor: theme.colorScheme.onSurface.withOpacity(0.5)),
+          // style: TextButton.styleFrom(
+          //   foregroundColor: theme.colorScheme.onSurface.withOpacity(0.5),
+          // ),
           child: authpending == 'anonymous'
               ? const SizedBox(
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(),
                 )
-              : Text('Try without account',
-                  style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(opacity1))),
+              : const Text('Try without account'),
         ),
       ],
     );

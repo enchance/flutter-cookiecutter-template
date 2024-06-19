@@ -22,6 +22,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
   bool isLoading = false;
   bool? genericError;
   bool? wrongPassword;
+  bool? saveSuccess;
 
   @override
   void dispose() {
@@ -51,6 +52,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
         backgroundColor: theme.colorScheme.surface,
       ),
       body: SingleChildScrollView(
+        controller: scrollcon,
         child: Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: settings.padx),
@@ -124,6 +126,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                     onSubmitted: (_) => onSubmit(context),
                   ),
                   const SizedBox(height: 20),
+                  const SizedBox(height: 300),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedLoadingButton(
@@ -134,7 +137,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                   ),
                   const SizedBox(height: 20),
                   TextButton(
-                    onPressed: () => context.pop(),
+                    onPressed: () => context.pop(ActionStatus.cancelled),
                     child: Text('Cancel',
                         style: TextStyle(
                           color: theme.colorScheme.onSurface.withOpacity(opacity1),
@@ -151,18 +154,25 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
   Widget buildNotices() {
     return Column(
       children: [
+        if (saveSuccess ?? false) GestureDetector(
+          onTap: () => context.pop(ActionStatus.success),
+          child: const SuccessNoticeBox(message: '''
+**Profile saved!** Tap this message to go back.
+'''),
+        ),
         if (genericError ?? false) const ErrorNoticeBox(message: '''
 Unable to save your profile. Try again in a few seconds.
 '''),
         if (wrongPassword ?? false) const ErrorNoticeBox(message: '''
 Wrong password. Try typing slower.
 '''),
-        if ((genericError ?? false) || (wrongPassword ?? false)) const SizedBox(height: 30),
+        if ((saveSuccess ?? false) || (genericError ?? false) || (wrongPassword ?? false)) const
+        SizedBox(height: 30),
       ],
     );
   }
 
-  void onSubmit(BuildContext context) async {
+  Future<void> onSubmit(BuildContext context) async {
     final form = formKey.currentState!;
 
     setState(() => isLoading = true);
@@ -177,32 +187,48 @@ Wrong password. Try typing slower.
       for (var i in form.fields.entries) {
         if (i.value.isDirty) toSave[i.key] = i.value.value;
       }
-      logger.d(toSave);
+      // logger.d(toSave);
 
-      if (toSave.isEmpty && context.mounted) return context.pop(ActionStatus.success);
+      if (toSave.isEmpty && context.mounted) {
+        setState(() {
+          saveSuccess = true;
+          genericError = false;
+          wrongPassword = false;
+        });
+        scrollToTop(scrollcon);
+        return;
+      }
 
       final status = await saveForm(toSave);
       logger.d(status);
 
       if (!context.mounted) throw Exception();
       if (status == 'success') {
-        return context.pop(ActionStatus.success);
-      } else if (status == 'wrong-password') {
-        scrollToTop(scrollcon);
         setState(() {
+          saveSuccess = true;
+          genericError = false;
+          wrongPassword = false;
+        });
+        scrollToTop(scrollcon);
+        return;
+      } else if (status == 'wrong-password') {
+        setState(() {
+          saveSuccess = false;
           genericError = false;
           wrongPassword = true;
         });
+        scrollToTop(scrollcon);
         return;
       }
       throw Exception();
       // }
     } catch (err, _) {
-      scrollToTop(scrollcon);
       setState(() {
+        saveSuccess = false;
         genericError = true;
         wrongPassword = false;
       });
+      scrollToTop(scrollcon);
     } finally {
       if (context.mounted) setState(() => isLoading = false);
     }
@@ -343,7 +369,7 @@ class _ReAuthenticateDialogState extends ConsumerState<ReAuthenticateDialog> {
             TextButton(
               onPressed: () => onSubmitPassword(context),
               child: isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(),

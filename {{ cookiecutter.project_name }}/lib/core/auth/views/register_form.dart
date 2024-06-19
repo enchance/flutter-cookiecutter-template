@@ -112,23 +112,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     ),
                     const SizedBox(height: 20),
                     TextButton(
-                        onPressed: () => context.goNamed('resetpass'),
-                        child: Wrap(
-                          children: [
-                            const SizedBox(width: 18),
-                            Icon(Bootstrap.key,
-                                color: theme.colorScheme.onSurface.withOpacity(opacity1)),
-                            const SizedBox(width: 10),
-                            Text('Lost password',
-                                style: TextStyle(
-                                    color: theme.colorScheme.onSurface.withOpacity(opacity1))),
-                          ],
-                        )
-                        // child: Text(
-                        //   'Lost password',
-                        //   style: TextStyle(color: theme.colorScheme.onPrimary.withOpacity(opacity1)),
-                        // ),
-                        ),
+                      onPressed: () => context.goNamed('resetpass'),
+                      child: const Text('Lost password'),
+                    ),
                     SizedBox(height: settings.bottomGap),
                   ],
                 )),

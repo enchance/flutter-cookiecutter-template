@@ -1,4 +1,4 @@
-enum Flavor { main, development }
+enum Flavor { prod, dev }
 
 enum Role { starter, moderator, admin }
 
@@ -10,4 +10,4 @@ enum C8n { accounts }
 
 enum AuthType { anonymous, google, x, email, unknown }
 
-enum ActionStatus { loading, success, fail, none }
+enum ActionStatus { loading, success, fail, cancelled, snone }

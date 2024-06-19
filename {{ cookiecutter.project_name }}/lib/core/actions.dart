@@ -7,13 +7,9 @@ import '../components/components.dart';
 
 /// Scroll to the top of the view. With [unfocus] if there is a keyboard open it is immediately
 /// closed which is probably what you want.
-void scrollToTop(ScrollController scrollcon, {bool unfocus = true}) {
+Future<void> scrollToTop(ScrollController scrollcon, {bool unfocus = true}) async {
   if (unfocus) FocusManager.instance.primaryFocus?.unfocus();
-  scrollcon.animateTo(
-    0,
-    duration: const Duration(milliseconds: 700),
-    curve: Curves.easeInOutQuart,
-  );
+  if (scrollcon.hasClients) scrollcon.jumpTo(0);
 }
 
 /// Sign out the user. [text] is optional text shown in the sign-in view if needed.

@@ -16,17 +16,17 @@ class Settings {
   final Flavor flavor;
   final String appName;
 
-  bool get isMain => flavor == Flavor.main;
+  bool get isMain => flavor == Flavor.prod;
 
-  bool get isDev => flavor == Flavor.development;
+  bool get isDev => flavor == Flavor.dev;
 
   // *******
   // Routes
   // *******
   // TODO: Cookiecutter
   // authWallAsDefault - true: /authwall, false: / (anonymous sign-in)
-  final authWallAsDefault = {{ 'false' if cookiecutter.allow_anonymous else 'true' }};
-  // final authWallAsDefault = false; // true: /authwall, false: / (anonymous sign-in)
+  final authWallAsDefault = false; // true: /authwall, false: / (anonymous sign-in)
+  // final authWallAsDefault = {{ 'false' if cookiecutter.allow_anonymous else 'true' }};
   final separateSigninView = false;
 
   // *******

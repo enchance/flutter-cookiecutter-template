@@ -93,7 +93,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
                         width: double.infinity,
                         constraints: BoxConstraints(minHeight: minHeight),
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 70),
+                          padding: const EdgeInsets.only(top: 80),
                           child: Column(
                             children: [
                               TextButton(
@@ -124,8 +124,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
   }
 
   Future<void> editProfile(BuildContext context) async {
-    ActionStatus? data = await context.pushNamed<ActionStatus>('editprofile');
-    logger.d(data);
+    await context.pushNamed<ActionStatus>('editprofile');
   }
 
   Widget buildCoverPreloader() {
