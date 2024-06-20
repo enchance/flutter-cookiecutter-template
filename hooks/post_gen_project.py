@@ -71,7 +71,7 @@ def main():
 
     os.chdir(project_name)
 
-    {% if cookiecutter.enable_google_signin %}
+    {% if cookiecutter.backend == 'firebase' %}
     subprocess.run('flutterfire configure'.split())
     {% endif %}
 
