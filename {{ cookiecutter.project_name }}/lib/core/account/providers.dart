@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import '../core.dart';
 
 part 'providers.g.dart';
+
+final accountProvider = StateProvider<Account>((ref) => Account.empty());
 
 @riverpod
 class UploadAvatar extends _$UploadAvatar {

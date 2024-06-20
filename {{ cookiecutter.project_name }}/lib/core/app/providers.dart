@@ -34,6 +34,3 @@ FlutterSecureStorage secureStorage(SecureStorageRef ref, {required String prefix
 }
 
 final useEmulatorProvider = StateProvider<bool>((_) => throw UnimplementedError());
-final roleProvider = StateProvider<Role>((_) => defaultRole);
-// final appbarTitleProvider = StateProvider<String>((_) => '');
-// final connectionProvider = StateProvider<bool>((_) => true);

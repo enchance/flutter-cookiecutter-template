@@ -24,8 +24,8 @@ class Settings {
   // Routes
   // *******
   // TODO: Cookiecutter
-  // authWallAsDefault - true: /authwall, false: / (anonymous sign-in)
-  final authWallAsDefault = false; // true: /authwall, false: / (anonymous sign-in)
+  // true: /authwall, false: / (anonymous sign-in)
+  final authWallAsDefault = false;
   // final authWallAsDefault = {{ 'false' if cookiecutter.allow_anonymous else 'true' }};
   final separateSigninView = false;
 

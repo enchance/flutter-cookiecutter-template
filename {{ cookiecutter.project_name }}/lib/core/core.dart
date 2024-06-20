@@ -9,6 +9,8 @@ export 'settings.dart';
 // export 'maps.dart';
 export 'utils.dart';
 
+export 'account/providers.dart';
+export 'account/services.dart';
 export 'account/views/account_view.dart';
 export 'account/views/profile_form.dart';
 

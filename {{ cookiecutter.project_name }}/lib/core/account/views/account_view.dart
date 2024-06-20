@@ -29,7 +29,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
     super.initState();
     animcon = AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
     curve = CurvedAnimation(parent: animcon, curve: Curves.easeInOutBack);
-    sizeAnim = Tween<double>(begin: 200, end: 600).animate(curve);
+    sizeAnim = Tween<double>(begin: 200, end: 500).animate(curve);
   }
 
   @override
@@ -61,7 +61,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
         appBar: AppBar(
           title: Text(kDebugMode ? account.uid : settings.appName),
           actions: const [
-            AppbarMenuPopupMenu(),
+            AppbarMenu(),
           ],
         ),
         body: SingleChildScrollView(
@@ -82,7 +82,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
                             image: DecorationImage(
                               image: account.coverProfile.isNotEmpty
                                   ? CachedNetworkImageProvider(account.coverProfile)
-                                  : const AssetImage('assets/images/landscape.png'),
+                                  : const AssetImage('assets/images/cover.jpg'),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -98,6 +98,9 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
                             children: [
                               TextButton(
                                 onPressed: () => editProfile(context),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: theme.colorScheme.primary
+                                ),
                                 child: const Text('Edit Profile'),
                               ),
                               const SizedBox(height: 20),

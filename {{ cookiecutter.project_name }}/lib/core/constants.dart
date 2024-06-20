@@ -5,7 +5,6 @@ import 'enums.dart';
 final logger = Logger(printer: PrettyPrinter());
 
 const defaultRole = Role.starter;
-
 const defaultDarkMode = false;
 const defaultGridSize = GridSize.large;
 const defaultTextSize = TextSize.medium;

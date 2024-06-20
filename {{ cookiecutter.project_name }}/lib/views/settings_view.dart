@@ -26,7 +26,7 @@ class SettingsView extends ConsumerWidget {
         title: const Text('Settings'),
         centerTitle: true,
         actions: const [
-          AppbarMenuPopupMenu(),
+          AppbarMenu(),
         ],
       ),
       body: SingleChildScrollView(

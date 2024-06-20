@@ -28,7 +28,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       appBar: AppBar(
         title: Text(kDebugMode ? account.uid : settings.appName),
         actions: const [
-          AppbarMenuPopupMenu(),
+          AppbarMenu(),
         ],
       ),
       body: Padding(

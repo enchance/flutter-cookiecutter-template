@@ -8,8 +8,8 @@ import 'package:icons_plus/icons_plus.dart';
 import '../../../components/components.dart';
 import '../../core.dart';
 
-class AppbarMenuPopupMenu extends ConsumerWidget {
-  const AppbarMenuPopupMenu({super.key});
+class AppbarMenu extends ConsumerWidget {
+  const AppbarMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +28,7 @@ class AppbarMenuPopupMenu extends ConsumerWidget {
           : null,
       itemBuilder: (context) => [
         PopupMenuItem(
-          onTap: () => context.goNamed('account'),
+          onTap: () => context.pushNamed('account'),
           padding: const EdgeInsets.only(left: 16),
           enabled: enableAccount,
           child: TextWithIcon(

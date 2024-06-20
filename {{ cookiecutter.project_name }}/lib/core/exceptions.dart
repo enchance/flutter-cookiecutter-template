@@ -14,14 +14,11 @@ class PermissionException extends AppException {
 }
 
 class UserNullException extends AppException {
-  UserNullException([super.message = 'User cannot be null', super.title = 'EMPTY_USER']);
+  UserNullException([super.message = 'User cannot be null', super.title = 'NULL_USER']);
 }
 
-class AccountException extends AppException {
-  AccountException([
-    super.message = 'Account error',
-    super.title = 'ACCOUNT_FAIL',
-  ]);
+class AccountNullException extends AppException {
+  AccountNullException([super.message = 'Account cannot be null', super.title = 'NULL_ACCOUNT']);
 }
 
 class ValueExistsException extends AppException {

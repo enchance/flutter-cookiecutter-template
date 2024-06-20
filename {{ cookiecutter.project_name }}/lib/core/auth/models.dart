@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -75,12 +76,20 @@ class Account with _$Account {
 
   bool get isAnonymous => email.isEmpty && authTypes.contains(AuthType.anonymous);
 
-  bool get canEditEmail {
-    if(authTypes.contains(AuthType.email)) return true;
-    return false;
-  }
+  bool get canEditEmail => authTypes.contains(AuthType.email);
 
   String get fullname => '${firstname.trim()} ${lastname.trim()}'.trim();
+}
+
+class AuthAccount {
+  final User? user;
+  final Account? account;
+
+  const AuthAccount([this.user, this.account]);
+
+  bool get hasUser => user != null;
+
+  bool get hasAccount => hasUser && account != null;
 }
 
 class TimestampConverter implements JsonConverter<DateTime, Timestamp> {

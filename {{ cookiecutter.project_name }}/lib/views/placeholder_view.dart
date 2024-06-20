@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import '../core/constants.dart';
+import '../core/app/components/appbar.dart';
+
+
+class PlaceholderView extends StatelessWidget {
+  final String title;
+
+  const PlaceholderView(this.title, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        actions: const [
+          AppbarMenu(),
+        ],
+      ),
+      body: Center(
+        child: Text(title, style: theme.textTheme.titleMedium),
+      ),
+    );
+  }
+}
 
 class PreloaderView extends StatelessWidget {
   const PreloaderView({super.key});

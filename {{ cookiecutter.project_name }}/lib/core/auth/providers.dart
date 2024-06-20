@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,7 +7,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../components/dialogs.dart';
 import '../core.dart';
@@ -14,18 +14,31 @@ import '../core.dart';
 part 'providers.g.dart';
 
 @riverpod
-Stream<User?> authStream(AuthStreamRef ref) => FirebaseAuth.instance.authStateChanges();
+Stream<AuthAccount> authStream(AuthStreamRef ref) =>
+    FirebaseAuth.instance.authStateChanges().transform(accountTransformer);
+
+final accountTransformer = StreamTransformer<User?, AuthAccount>.fromHandlers(
+    handleData: (User? user, EventSink<AuthAccount> sink) async {
+  try {
+    if (user == null) return sink.add(const AuthAccount());
+
+    final account = await AccountService.fetchOrCreate(user);
+    sink.add(AuthAccount(user, account));
+  } catch (err, _) {
+    logger.e(err);
+    sink.add(const AuthAccount());
+  }
+});
 
 final signOutTextProvider = StateProvider<String?>((ref) => null);
 
 final authPendingProvider = StateProvider<String>((ref) => '');
 
-final accountProvider = StateProvider<Account>((ref) => Account.empty());
-
 // TODO: This used to be keepAlive=true in case it fails
 @riverpod
 class Auth extends _$Auth {
   Object? _key;
+
   @override
   FutureOr<UserCredential?> build() async {
     _key = Object();

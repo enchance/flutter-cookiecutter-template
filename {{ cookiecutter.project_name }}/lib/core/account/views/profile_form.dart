@@ -1,13 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:icons_plus/icons_plus.dart';
 
 import '../../core.dart';
 import '../../../components/components.dart';
+import '../providers.dart';
 
 class EditProfileForm extends ConsumerStatefulWidget {
   const EditProfileForm({super.key});
@@ -71,7 +70,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                     valueTransformer: (val) => val?.trim(),
                     validator: settings.validators.textRequired,
                     decoration: const InputDecoration(
-                      labelText: 'Display',
+                      labelText: 'Display name',
                     ),
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
@@ -84,7 +83,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                     valueTransformer: (val) => val?.trim(),
                     validator: settings.validators.text,
                     decoration: const InputDecoration(
-                      labelText: 'Fullname',
+                      labelText: 'Full Name',
                     ),
                     keyboardType: TextInputType.name,
                     textInputAction: TextInputAction.next,
@@ -98,21 +97,21 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                   //   },
                   //   child: const Text('Split'),
                   // ),
-                  const SizedBox(height: 10),
-                  if (!account.isAnonymous)
-                    FormBuilderTextField(
-                      name: 'email',
-                      valueTransformer: (val) => val?.trim(),
-                      validator: settings.validators.emailRequired,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                      ),
-                      // enabled: account.canEditEmail,
-                      // enabled: account.authTypes.contains(AuthType.email),
-                      enabled: false,
-                      keyboardType: TextInputType.name,
-                      textInputAction: TextInputAction.next,
-                    ),
+                  // const SizedBox(height: 10),
+                  // if (!account.isAnonymous)
+                  //   FormBuilderTextField(
+                  //     name: 'email',
+                  //     valueTransformer: (val) => val?.trim(),
+                  //     validator: settings.validators.emailRequired,
+                  //     decoration: const InputDecoration(
+                  //       labelText: 'Email',
+                  //     ),
+                  //     // enabled: account.canEditEmail,
+                  //     // enabled: account.authTypes.contains(AuthType.email),
+                  //     enabled: false,
+                  //     keyboardType: TextInputType.name,
+                  //     textInputAction: TextInputAction.next,
+                  //   ),
                   const SizedBox(height: 10),
                   FormBuilderTextField(
                     name: 'mobile',
@@ -126,7 +125,6 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                     onSubmitted: (_) => onSubmit(context),
                   ),
                   const SizedBox(height: 20),
-                  const SizedBox(height: 300),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedLoadingButton(
@@ -198,9 +196,7 @@ Wrong password. Try typing slower.
         scrollToTop(scrollcon);
         return;
       }
-
-      final status = await saveForm(toSave);
-      logger.d(status);
+      final status = await saveFormData(toSave);
 
       if (!context.mounted) throw Exception();
       if (status == 'success') {
@@ -234,7 +230,7 @@ Wrong password. Try typing slower.
     }
   }
 
-  Future<String> saveForm(Map<String, dynamic> json) async {
+  Future<String> saveFormData(Map<String, dynamic> json) async {
     Account account = ref.watch(accountProvider);
     final settings = ref.watch(settingsProvider);
 
