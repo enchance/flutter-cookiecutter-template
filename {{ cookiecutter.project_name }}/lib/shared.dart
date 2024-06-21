@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/core.dart';
 import 'core/routes.dart';
 
+// TODO: Show dialog if anonymous user tries to sign-out saying data will be lost
+
 Future<void> sharedMain({
   required Flavor flavor,
   required String title,

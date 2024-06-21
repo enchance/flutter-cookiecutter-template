@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core.dart';
-import '../providers.dart';
 import '../../../components/components.dart';
 
 class AccountView extends ConsumerStatefulWidget {

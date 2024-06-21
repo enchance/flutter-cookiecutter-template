@@ -22,6 +22,7 @@ Future<void> signOut(BuildContext context, WidgetRef ref, {String? text}) async 
   // -------------------------------------------
   // Clean up
   // -------------------------------------------
+  ref.read(authAccountProvider.notifier).update((_) => const AuthAccount());
   ref.read(accountProvider.notifier).update((_) => Account.empty());
   ref.read(authPendingProvider.notifier).update((_) => '');
   ref.read(signOutTextProvider.notifier).update((_) => text);

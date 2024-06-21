@@ -36,14 +36,6 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
 
     final theme = Theme.of(context);
 
-    final json = account.toJson();
-    final initialValue = {
-      ...json,
-      'fullname': '${json['firstname'].trim()} ${json['lastname'].trim()}',
-    };
-    initialValue.remove('firstname');
-    initialValue.remove('lastname');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -58,7 +50,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
           child: FormBuilder(
               key: formKey,
               onChanged: () => setState(() => isLoading = false),
-              initialValue: initialValue,
+              initialValue: account.toJson(),
               child: Column(
                 children: [
                   SizedBox(height: settings.topGap),
@@ -97,6 +89,7 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                   //   },
                   //   child: const Text('Split'),
                   // ),
+
                   // const SizedBox(height: 10),
                   // if (!account.isAnonymous)
                   //   FormBuilderTextField(
@@ -114,9 +107,9 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
                   //   ),
                   const SizedBox(height: 10),
                   FormBuilderTextField(
-                    name: 'mobile',
+                    name: 'phone',
                     valueTransformer: (val) => val?.trim(),
-                    validator: settings.validators.mobile,
+                    validator: settings.validators.phone,
                     decoration: const InputDecoration(
                       labelText: 'Mobile',
                     ),
@@ -152,20 +145,21 @@ class _EditProfileFormState extends ConsumerState<EditProfileForm> {
   Widget buildNotices() {
     return Column(
       children: [
-        if (saveSuccess ?? false) GestureDetector(
-          onTap: () => context.pop(ActionStatus.success),
-          child: const SuccessNoticeBox(message: '''
+        if (saveSuccess ?? false)
+          GestureDetector(
+            onTap: () => context.pop(ActionStatus.success),
+            child: const SuccessNoticeBox(message: '''
 **Profile saved!** Tap this message to go back.
 '''),
-        ),
+          ),
         if (genericError ?? false) const ErrorNoticeBox(message: '''
 Unable to save your profile. Try again in a few seconds.
 '''),
         if (wrongPassword ?? false) const ErrorNoticeBox(message: '''
 Wrong password. Try typing slower.
 '''),
-        if ((saveSuccess ?? false) || (genericError ?? false) || (wrongPassword ?? false)) const
-        SizedBox(height: 30),
+        if ((saveSuccess ?? false) || (genericError ?? false) || (wrongPassword ?? false))
+          const SizedBox(height: 30),
       ],
     );
   }
@@ -270,14 +264,8 @@ Wrong password. Try typing slower.
         await user.updateDisplayName(json['display']);
         account = account.copyWith(display: json['display']);
       }
-      if (json.containsKey('mobile')) account = account.copyWith(mobile: json['mobile']);
-      if (json.containsKey('fullname')) {
-        final (firstname, lastname) = splitName(json['fullname']);
-        account = account.copyWith(firstname: firstname, lastname: lastname);
-        json['firstname'] = firstname;
-        json['lastname'] = lastname;
-        json.remove('fullname');
-      }
+      if (json.containsKey('phone')) account = account.copyWith(phone: json['phone']);
+      if (json.containsKey('fullname')) account = account.copyWith(fullname: json['fullname']);
       // TODO: If email is changend only save after verification
       bool success = await AccountService.save(user.uid, json);
       if (success) {

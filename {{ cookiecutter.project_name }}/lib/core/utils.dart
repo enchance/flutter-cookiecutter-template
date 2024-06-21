@@ -178,15 +178,11 @@ T setResponsiveValue<T>(BuildContext context,
   //   if (ResponsiveBreakpoints.of(context).largerThan(DESKTOP)) logger.d('is4K');
   // }
 
-  if (ResponsiveBreakpoints.of(context).largerThan(DESKTOP)) {
-    return largerThanDesktop ?? desktop ?? tablet ?? mobile;
-  } else if (ResponsiveBreakpoints.of(context).equals(DESKTOP)) {
-    return desktop ?? tablet ?? mobile;
-  } else if (ResponsiveBreakpoints.of(context).equals(TABLET)) {
-    return tablet ?? mobile;
-  } else if (ResponsiveBreakpoints.of(context).equals(MOBILE)) {
-    return mobile;
-  }
+  final breakpoints = ResponsiveBreakpoints.of(context);
+  if (breakpoints.largerThan(DESKTOP)) return largerThanDesktop ?? desktop ?? tablet ?? mobile;
+  if (breakpoints.equals(DESKTOP)) return desktop ?? tablet ?? mobile;
+  if (breakpoints.equals(TABLET)) return tablet ?? mobile;
+  if (breakpoints.equals(MOBILE)) return mobile;
   return phone ?? mobile;
 }
 
@@ -303,6 +299,9 @@ String prefKey(String str) {
     'bin',
     'ibn',
   ];
+
+  // Handle emails
+  if(fullName.contains('@')) fullName = fullName.split('@').first.replaceAll('.', ' ');
 
   // Handle names with commas
   if (fullName.contains(',')) {

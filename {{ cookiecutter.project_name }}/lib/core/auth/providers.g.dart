@@ -6,7 +6,7 @@ part of 'providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authStreamHash() => r'6369ee6e4e806362bb7b8f79d684a44b08e9729b';
+String _$authStreamHash() => r'14a657dc29212aad6a03aaa76882906cd915207c';
 
 /// See also [authStream].
 @ProviderFor(authStream)
@@ -20,7 +20,7 @@ final authStreamProvider = AutoDisposeStreamProvider<AuthAccount>.internal(
 );
 
 typedef AuthStreamRef = AutoDisposeStreamProviderRef<AuthAccount>;
-String _$authHash() => r'245614df2fa78eab77e0bb470e6012d3e0ce5a54';
+String _$authHash() => r'5de451fd1ee223ba4323f180d0c91083cf1f9d8d';
 
 /// See also [Auth].
 @ProviderFor(Auth)

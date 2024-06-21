@@ -23,10 +23,10 @@ class Settings {
   // *******
   // Routes
   // *******
-  // TODO: Cookiecutter
+  // TODO: Cookie
   // true: /authwall, false: / (anonymous sign-in)
-  final authWallAsDefault = false;
   // final authWallAsDefault = {{ 'false' if cookiecutter.allow_anonymous else 'true' }};
+  final authWallAsDefault = false;
   final separateSigninView = false;
 
   // *******
@@ -78,6 +78,9 @@ class Settings {
   // ************************************************************
   // DO NOT CHANGE. THESE ARE SET AT THE START OF THE PROJECT.
   // ************************************************************
+  // TODO: Cookie
+  // final AuthHost authHost = AppBackend.values.byName('{{ cookiecutter.backend }}');
+  final AppBackend backend = AppBackend.firebase;
   final String androidPackageName = '{{ cookiecutter.package_name }}';
   final String iOSBundleId = '';
 }
@@ -90,7 +93,7 @@ class FieldValidators {
     FormBuilderValidators.required(),
     FormBuilderValidators.maxLength(100),
   ]);
-  final mobile = FormBuilderValidators.compose([
+  final phone = FormBuilderValidators.compose([
     FormBuilderValidators.match(r'^[\d\-+]+$'),
     FormBuilderValidators.maxLength(15),
   ]);

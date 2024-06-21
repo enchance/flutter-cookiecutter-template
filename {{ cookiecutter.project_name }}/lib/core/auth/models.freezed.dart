@@ -22,17 +22,15 @@ Account _$AccountFromJson(Map<String, dynamic> json) {
 mixin _$Account {
   String get uid => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
-  String get firstname => throw _privateConstructorUsedError;
-  String get lastname => throw _privateConstructorUsedError;
+  String get fullname => throw _privateConstructorUsedError;
   @AuthTypeConverter()
   List<AuthType> get authTypes => throw _privateConstructorUsedError;
-  String? get mobile => throw _privateConstructorUsedError;
+  String? get phone => throw _privateConstructorUsedError;
   Role? get role => throw _privateConstructorUsedError;
   String get avatar => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   String get display => throw _privateConstructorUsedError;
-  String get coverProfile =>
-      throw _privateConstructorUsedError; // @Default('') final String linkedAccount,
+  String get coverProfile => throw _privateConstructorUsedError;
   @TimestampConverter()
   DateTime? get bannedAt => throw _privateConstructorUsedError;
   @TimestampConverter()
@@ -51,10 +49,9 @@ abstract class $AccountCopyWith<$Res> {
   $Res call(
       {String uid,
       String email,
-      String firstname,
-      String lastname,
+      String fullname,
       @AuthTypeConverter() List<AuthType> authTypes,
-      String? mobile,
+      String? phone,
       Role? role,
       String avatar,
       String username,
@@ -79,10 +76,9 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
   $Res call({
     Object? uid = null,
     Object? email = null,
-    Object? firstname = null,
-    Object? lastname = null,
+    Object? fullname = null,
     Object? authTypes = null,
-    Object? mobile = freezed,
+    Object? phone = freezed,
     Object? role = freezed,
     Object? avatar = null,
     Object? username = null,
@@ -100,21 +96,17 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      firstname: null == firstname
-          ? _value.firstname
-          : firstname // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastname: null == lastname
-          ? _value.lastname
-          : lastname // ignore: cast_nullable_to_non_nullable
+      fullname: null == fullname
+          ? _value.fullname
+          : fullname // ignore: cast_nullable_to_non_nullable
               as String,
       authTypes: null == authTypes
           ? _value.authTypes
           : authTypes // ignore: cast_nullable_to_non_nullable
               as List<AuthType>,
-      mobile: freezed == mobile
-          ? _value.mobile
-          : mobile // ignore: cast_nullable_to_non_nullable
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
               as String?,
       role: freezed == role
           ? _value.role
@@ -158,10 +150,9 @@ abstract class _$$AccountImplCopyWith<$Res> implements $AccountCopyWith<$Res> {
   $Res call(
       {String uid,
       String email,
-      String firstname,
-      String lastname,
+      String fullname,
       @AuthTypeConverter() List<AuthType> authTypes,
-      String? mobile,
+      String? phone,
       Role? role,
       String avatar,
       String username,
@@ -184,10 +175,9 @@ class __$$AccountImplCopyWithImpl<$Res>
   $Res call({
     Object? uid = null,
     Object? email = null,
-    Object? firstname = null,
-    Object? lastname = null,
+    Object? fullname = null,
     Object? authTypes = null,
-    Object? mobile = freezed,
+    Object? phone = freezed,
     Object? role = freezed,
     Object? avatar = null,
     Object? username = null,
@@ -205,21 +195,17 @@ class __$$AccountImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      firstname: null == firstname
-          ? _value.firstname
-          : firstname // ignore: cast_nullable_to_non_nullable
-              as String,
-      lastname: null == lastname
-          ? _value.lastname
-          : lastname // ignore: cast_nullable_to_non_nullable
+      fullname: null == fullname
+          ? _value.fullname
+          : fullname // ignore: cast_nullable_to_non_nullable
               as String,
       authTypes: null == authTypes
           ? _value._authTypes
           : authTypes // ignore: cast_nullable_to_non_nullable
               as List<AuthType>,
-      mobile: freezed == mobile
-          ? _value.mobile
-          : mobile // ignore: cast_nullable_to_non_nullable
+      phone: freezed == phone
+          ? _value.phone
+          : phone // ignore: cast_nullable_to_non_nullable
               as String?,
       role: freezed == role
           ? _value.role
@@ -259,10 +245,9 @@ class _$AccountImpl extends _Account {
   const _$AccountImpl(
       {this.uid = '',
       required this.email,
-      required this.firstname,
-      required this.lastname,
+      required this.fullname,
       @AuthTypeConverter() required final List<AuthType> authTypes,
-      this.mobile,
+      this.phone,
       this.role,
       this.avatar = '',
       this.username = '',
@@ -282,9 +267,7 @@ class _$AccountImpl extends _Account {
   @override
   final String email;
   @override
-  final String firstname;
-  @override
-  final String lastname;
+  final String fullname;
   final List<AuthType> _authTypes;
   @override
   @AuthTypeConverter()
@@ -295,7 +278,7 @@ class _$AccountImpl extends _Account {
   }
 
   @override
-  final String? mobile;
+  final String? phone;
   @override
   final Role? role;
   @override
@@ -310,7 +293,6 @@ class _$AccountImpl extends _Account {
   @override
   @JsonKey()
   final String coverProfile;
-// @Default('') final String linkedAccount,
   @override
   @TimestampConverter()
   final DateTime? bannedAt;
@@ -320,7 +302,7 @@ class _$AccountImpl extends _Account {
 
   @override
   String toString() {
-    return 'Account(uid: $uid, email: $email, firstname: $firstname, lastname: $lastname, authTypes: $authTypes, mobile: $mobile, role: $role, avatar: $avatar, username: $username, display: $display, coverProfile: $coverProfile, bannedAt: $bannedAt, createdAt: $createdAt)';
+    return 'Account(uid: $uid, email: $email, fullname: $fullname, authTypes: $authTypes, phone: $phone, role: $role, avatar: $avatar, username: $username, display: $display, coverProfile: $coverProfile, bannedAt: $bannedAt, createdAt: $createdAt)';
   }
 
   @override
@@ -330,13 +312,11 @@ class _$AccountImpl extends _Account {
             other is _$AccountImpl &&
             (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.email, email) || other.email == email) &&
-            (identical(other.firstname, firstname) ||
-                other.firstname == firstname) &&
-            (identical(other.lastname, lastname) ||
-                other.lastname == lastname) &&
+            (identical(other.fullname, fullname) ||
+                other.fullname == fullname) &&
             const DeepCollectionEquality()
                 .equals(other._authTypes, _authTypes) &&
-            (identical(other.mobile, mobile) || other.mobile == mobile) &&
+            (identical(other.phone, phone) || other.phone == phone) &&
             (identical(other.role, role) || other.role == role) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
             (identical(other.username, username) ||
@@ -356,10 +336,9 @@ class _$AccountImpl extends _Account {
       runtimeType,
       uid,
       email,
-      firstname,
-      lastname,
+      fullname,
       const DeepCollectionEquality().hash(_authTypes),
-      mobile,
+      phone,
       role,
       avatar,
       username,
@@ -386,10 +365,9 @@ abstract class _Account extends Account {
   const factory _Account(
           {final String uid,
           required final String email,
-          required final String firstname,
-          required final String lastname,
+          required final String fullname,
           @AuthTypeConverter() required final List<AuthType> authTypes,
-          final String? mobile,
+          final String? phone,
           final Role? role,
           final String avatar,
           final String username,
@@ -407,14 +385,12 @@ abstract class _Account extends Account {
   @override
   String get email;
   @override
-  String get firstname;
-  @override
-  String get lastname;
+  String get fullname;
   @override
   @AuthTypeConverter()
   List<AuthType> get authTypes;
   @override
-  String? get mobile;
+  String? get phone;
   @override
   Role? get role;
   @override
@@ -425,7 +401,7 @@ abstract class _Account extends Account {
   String get display;
   @override
   String get coverProfile;
-  @override // @Default('') final String linkedAccount,
+  @override
   @TimestampConverter()
   DateTime? get bannedAt;
   @override

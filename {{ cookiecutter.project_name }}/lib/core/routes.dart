@@ -13,16 +13,18 @@ part 'routes.g.dart';
 
 @riverpod
 Future<GoRouter> routes(RoutesRef ref, Role role, SharedPreferences prefs) async {
-  final authstream = ref.watch(authStreamProvider);
   final settings = ref.watch(settingsProvider);
-  final authAccount = authstream.valueOrNull ?? const AuthAccount();
+  final authstream = ref.watch(authStreamProvider);
+  final authaccount = authstream.valueOrNull ?? const AuthAccount();
   bool isReady = false;
 
   // Run all required resources here so it won't jump to / until everything is ready
-  if (authAccount.hasAccount) {
+  if (authaccount.hasAccount) {
+    final Account account = authaccount.account!;
     try {
-      final success = await ref.read(authProvider.notifier).fetchResources(authAccount.account!);
-      ref.read(accountProvider.notifier).update((_) => authAccount.account!);
+      final success = await ref.read(authProvider.notifier).fetchResources(account);
+      ref.read(authAccountProvider.notifier).update((_) => authaccount);
+      ref.read(accountProvider.notifier).update((_) => account);
       ref.read(authPendingProvider.notifier).update((_) => '');
       ref.read(signOutTextProvider.notifier).update((_) => null);
       isReady = success;

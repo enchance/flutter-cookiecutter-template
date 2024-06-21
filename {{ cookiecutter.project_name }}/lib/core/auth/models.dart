@@ -15,16 +15,14 @@ class Account with _$Account {
   const factory Account({
     @Default('') String uid,
     required final String email,
-    required final String firstname,
-    required final String lastname,
+    required final String fullname,
     @AuthTypeConverter() required final List<AuthType> authTypes,
-    final String? mobile,
+    final String? phone,
     final Role? role,
     @Default('') final String avatar,
     @Default('') final String username,
     @Default('') final String display,
     @Default('') final String coverProfile,
-    // @Default('') final String linkedAccount,
     @TimestampConverter() required DateTime? bannedAt,
     @TimestampConverter() required DateTime? createdAt,
   }) = _Account;
@@ -35,21 +33,20 @@ class Account with _$Account {
     required String uid,
     required AuthType authType,
     String? email,
-    String? firstname,
-    String? lastname,
-    String? mobile,
+    String? fullname,
+    String? phone,
     String? display,
     String? avatar,
     Role role = defaultRole,
   }) {
+    final (firstname, _) = splitName(fullname ?? '');
     return Account(
       uid: uid,
       email: email ?? '',
-      firstname: firstname ?? '',
-      lastname: lastname ?? '',
+      fullname: fullname ?? firstname,
       authTypes: [authType],
-      mobile: mobile ?? '',
-      display: display ?? firstname ?? '',
+      phone: phone ?? '',
+      display: display ?? firstname,
       role: role,
       avatar: avatar ?? '',
       bannedAt: null,
@@ -60,8 +57,7 @@ class Account with _$Account {
   factory Account.empty() {
     return const Account(
       email: '',
-      firstname: '',
-      lastname: '',
+      fullname: '',
       authTypes: [],
       bannedAt: null,
       createdAt: null,
@@ -77,8 +73,6 @@ class Account with _$Account {
   bool get isAnonymous => email.isEmpty && authTypes.contains(AuthType.anonymous);
 
   bool get canEditEmail => authTypes.contains(AuthType.email);
-
-  String get fullname => '${firstname.trim()} ${lastname.trim()}'.trim();
 }
 
 class AuthAccount {

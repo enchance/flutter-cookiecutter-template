@@ -21,7 +21,6 @@ class AccountService {
 
   /// Get the account record for [uid] from Firestore if exists else create it.
   static Future<Account?> fetchOrCreate(User user) async {
-    // logger.d(user);
     try {
       final db = FirebaseFirestore.instance;
       final ref = db.collection(C8n.accounts.name).doc(user.uid);
@@ -35,16 +34,21 @@ class AccountService {
         account = Account.fromJson(refget.data() as Map<String, dynamic>);
       } else {
         logger.d('CREATE_ACCOUNT');
-        String email = user.email ?? '';
-        String display = user.displayName ?? email.split('@').first;
+        final email = user.email ?? '';
+        final (firstname, lastname) = splitName(email);
+        String fullname = '$firstname $lastname'.trim();
+        if(fullname.isEmpty) fullname = user.displayName ?? '';
+        final display = user.displayName ?? parseDisplayName(fullname);
 
         account = Account.create(
           uid: user.uid,
           display: display,
+          fullname: fullname,
           email: user.email,
           avatar: user.photoURL,
           authType: authType,
         );
+        logger.d(account);
         await ref.set(account.toJson());
       }
       return account;

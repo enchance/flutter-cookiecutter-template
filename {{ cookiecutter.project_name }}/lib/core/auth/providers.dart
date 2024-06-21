@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,21 +11,26 @@ import '../core.dart';
 part 'providers.g.dart';
 
 @riverpod
-Stream<AuthAccount> authStream(AuthStreamRef ref) =>
-    FirebaseAuth.instance.authStateChanges().transform(accountTransformer);
+Stream<AuthAccount> authStream(AuthStreamRef ref) {
+  final accountTransformer = StreamTransformer<User?, AuthAccount>.fromHandlers(
+      handleData: (User? user, EventSink<AuthAccount> sink) async {
+    try {
+      if (user == null) throw UserNullException();
+      final account = await AccountService.fetchOrCreate(user);
+      if (account == null) throw AccountNullException();
+      sink.add(AuthAccount(user, account));
+    } on UserNullException {
+      sink.add(const AuthAccount());
+    } catch (err, _) {
+      logger.e(err);
+      sink.add(const AuthAccount());
+    }
+  });
 
-final accountTransformer = StreamTransformer<User?, AuthAccount>.fromHandlers(
-    handleData: (User? user, EventSink<AuthAccount> sink) async {
-  try {
-    if (user == null) return sink.add(const AuthAccount());
+  return FirebaseAuth.instance.authStateChanges().transform(accountTransformer);
+}
 
-    final account = await AccountService.fetchOrCreate(user);
-    sink.add(AuthAccount(user, account));
-  } catch (err, _) {
-    logger.e(err);
-    sink.add(const AuthAccount());
-  }
-});
+final authAccountProvider = StateProvider<AuthAccount>((ref) => const AuthAccount());
 
 final signOutTextProvider = StateProvider<String?>((ref) => null);
 
@@ -89,7 +91,7 @@ class Auth extends _$Auth {
     final key = _key;
     state = const AsyncLoading();
     final newState = await AsyncValue.guard(() async {
-      Account account = ref.watch(accountProvider)!;
+      Account account = ref.watch(accountProvider);
 
       try {
         ref.read(authPendingProvider.notifier).update((_) => 'linkGoogle');
@@ -97,15 +99,25 @@ class Auth extends _$Auth {
         final user = creds?.user;
         if (user == null) return null;
 
-        String display = user.displayName ?? user.email!.split('@').first;
+        final email = user.email ?? '';
         final authType = AccountService.guessAuthType(user);
+        String fullname = account.fullname;
+        String display = account.display;
+
+        if(fullname.isEmpty) {
+          final (firstname, lastname) = splitName(email);
+          fullname = '$firstname $lastname'.trim();
+        }
+        if(display.isEmpty) {
+          display = user.displayName ?? parseDisplayName(fullname);
+        }
+
         account = account.copyWith(
-          email: user.email!,
+          email: email,
           display: display,
-          firstname: display,
+          fullname: fullname,
           avatar: creds?.additionalUserInfo?.profile?['picture'] ?? '',
           authTypes: [...account.authTypes, authType],
-          // authTypes: [...account.authTypes, AuthType.google],
         );
         await AccountService.save(account.uid, account.toJson());
         ref.read(accountProvider.notifier).update((_) => account);
@@ -137,8 +149,8 @@ If you're the owner of that account then we recommend just signing in again and 
     if (key == _key) state = newState;
   }
 
-  /// Do not call this method directly. Use actions: signOut.
-  /// Setting [fullSignOut] to false doesn't sign-out the user but instead only reenables the
+  /// DO NOT CALL THIS METHOD DIRECTLY. Use actions: signOut.
+  /// Making [fullSignOut] false doesn't sign-out the user but instead only reenables the
   /// google account selection card for reselection.
   Future<void> signOut({bool fullSignOut = true}) async {
     state = const AsyncLoading();
