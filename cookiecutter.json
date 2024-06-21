@@ -4,7 +4,6 @@
     "package_name": "{{ cookiecutter.organization.lower() }}.{{ cookiecutter.project_name.lower().replace(' ', '') }}",
     "author": "enchance",
     "email": "{{ cookiecutter.author }}@gmail.com",
-    "backend": ["firebase", "supabase"],
     "allow_anonymous": true,
     "_jinja2_env_vars": {"lstrip_blocks": true, "trim_blocks": true}
 }
