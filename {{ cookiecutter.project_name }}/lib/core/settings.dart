@@ -26,7 +26,7 @@ class Settings {
   // TODO: Cookie
   // true: /authwall, false: / (anonymous sign-in)
   // final authWallAsDefault = {{ 'false' if cookiecutter.allow_anonymous else 'true' }};
-  final authWallAsDefault = false;
+  final authWallAsDefault = true;
   final separateSigninView = false;
 
   // *******
@@ -45,6 +45,12 @@ class Settings {
   // ********
   // final String languageCode = 'en-us';
   // final List<String> languages = [];
+
+  // ******
+  // Supabase
+  // ******
+  final storageTtl = 3600 * 24 * 365 * 100;
+
 
   // ******
   // Forms
@@ -79,8 +85,7 @@ class Settings {
   // DO NOT CHANGE. THESE ARE SET AT THE START OF THE PROJECT.
   // ************************************************************
   // TODO: Cookie
-  // final AuthHost authHost = AppBackend.values.byName('{{ cookiecutter.backend }}');
-  final AppBackend backend = AppBackend.firebase;
+  final AppBackend backend = AppBackend.supabase;
   final String androidPackageName = '{{ cookiecutter.package_name }}';
   final String iOSBundleId = '';
 }

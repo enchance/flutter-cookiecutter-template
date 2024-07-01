@@ -10,6 +10,7 @@ import 'package:slugify/slugify.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core.dart';
 // import '../scans/scans.dart';
@@ -187,9 +188,12 @@ T setResponsiveValue<T>(BuildContext context,
 }
 
 String prefKey(String str) {
-  final user = FirebaseAuth.instance.currentUser;
+  final supabase = Supabase.instance.client;
+
+  // final user = FirebaseAuth.instance.currentUser;
+  final user = supabase.auth.currentUser;
   if (user == null) return str;
-  return '$str-${user.uid}';
+  return '$str-${user.id}';
 }
 
 /// Split a name into their respective first and last names

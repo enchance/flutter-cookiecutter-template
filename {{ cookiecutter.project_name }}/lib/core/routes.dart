@@ -14,23 +14,37 @@ part 'routes.g.dart';
 @riverpod
 Future<GoRouter> routes(RoutesRef ref, Role role, SharedPreferences prefs) async {
   final settings = ref.watch(settingsProvider);
-  final authstream = ref.watch(authStreamProvider);
-  final authaccount = authstream.valueOrNull ?? const AuthAccount();
+  final userStream = ref.watch(userStreamProvider);
+  final prefs = ref.watch(prefsProvider);
   bool isReady = false;
 
-  // Run all required resources here so it won't jump to / until everything is ready
-  if (authaccount.hasAccount) {
-    final Account account = authaccount.account!;
+  // Error
+  if (userStream.hasError) {
+    ref.read(authPendingProvider.notifier).update((_) => '');
+    ref.read(signOutTextProvider.notifier).update((_) => null);
+    isReady = false;
+  }
+
+  final user = userStream.valueOrNull;
+  if (user != null) {
     try {
-      final success = await ref.read(authProvider.notifier).fetchResources(account);
-      ref.read(authAccountProvider.notifier).update((_) => authaccount);
-      ref.read(accountProvider.notifier).update((_) => account);
-      ref.read(authPendingProvider.notifier).update((_) => '');
-      ref.read(signOutTextProvider.notifier).update((_) => null);
-      isReady = success;
+      Account? account = await AccountService.fetchOrCreate(user);
+      // logger.d(user);
+      // logger.d(account);
+      if (account != null) {
+        account = await ref.read(authProvider.notifier).initializeTheThing(account);
+        if(account == null) throw AccountNullException();
+        ref.read(accountProvider.notifier).update((_) => account!);
+        isReady = !account.isEmpty;
+      } else {
+        ref.read(accountProvider.notifier).update((_) => Account.empty());
+      }
     } catch (err, _) {
       logger.e(err);
       isReady = false;
+    } finally {
+      ref.read(authPendingProvider.notifier).update((_) => '');
+      ref.read(signOutTextProvider.notifier).update((_) => null);
     }
   }
 
@@ -43,7 +57,7 @@ Future<GoRouter> routes(RoutesRef ref, Role role, SharedPreferences prefs) async
         '/authwall/resetpass',
       ].contains(state.matchedLocation);
       bool showAuthWall = prefs.getBool('showAuthWall') ?? settings.authWallAsDefault;
-      bool showOnboarding = prefs.getBool(prefKey('showOnboarding')) ?? true;
+      bool showOnboarding = prefs.getBool('showOnboarding') ?? true;
 
       if (!isReady) {
         if (showOnboarding) return '/onboarding';

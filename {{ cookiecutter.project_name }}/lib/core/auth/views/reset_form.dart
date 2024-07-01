@@ -73,7 +73,7 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                       ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => onSubmit(context),
+                      // onSubmitted: (_) => onSubmit(context),
                     ),
                     // if ((formKey.currentState?.fields['email']?.hasError ?? false) == false)
                     //   FieldRequiredText(),
@@ -82,7 +82,8 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
                       width: double.infinity,
                       child: ElevatedLoadingButton(
                         text: 'Reset your password',
-                        onPressed: () => onSubmit(context),
+                        onPressed: () {},
+                        // onPressed: () => onSubmit(context),
                         loading: isLoading,
                       ),
                     ),
@@ -112,67 +113,39 @@ class _ResetPasswordFormState extends ConsumerState<ResetPasswordForm> {
     );
   }
 
-  void onSubmit(BuildContext context) async {
-    final form = formKey.currentState!;
-
-    setState(() {
-      isLoading = true;
-      emailSent = false;
-      recipient = '';
-    });
-    try {
-      await Future.delayed(const Duration(seconds: 2));
-      if (!form.saveAndValidate()) return;
-      Map<String, dynamic> data = form.value;
-      // logger.d(data);
-
-      // Start here
-      bool success = await AuthService.resetPassword(data['email']);
-      setState(() {
-        emailSent = success;
-        recipient = success ? data['email'] : '';
-      });
-      if(success) form.fields['email']!.reset();
-
-    } catch (err, _) {
-      logger.e(err);
-      if (context.mounted) {
-        showErrorDialog(
-          context,
-          title: 'Reset error',
-          message: 'Unable to reset your password. Try again in a few seconds.',
-        );
-      }
-    } finally {
-      if (context.mounted) setState(() => isLoading = false);
-    }
-  }
-
-  // void onSubmit() async {
+  // void onSubmit(BuildContext context) async {
   //   final form = formKey.currentState!;
   //
+  //   setState(() {
+  //     isLoading = true;
+  //     emailSent = false;
+  //     recipient = '';
+  //   });
   //   try {
+  //     await Future.delayed(const Duration(seconds: 2));
   //     if (!form.saveAndValidate()) return;
+  //     Map<String, dynamic> data = form.value;
+  //     // logger.d(data);
   //
-  //     final data = form.value;
-  //     await ref.read(resetPasswordProvider.notifier).resetPassword(data['email']);
+  //     // Start here
+  //     bool success = await AuthService.resetPassword(data['email']);
+  //     setState(() {
+  //       emailSent = success;
+  //       recipient = success ? data['email'] : '';
+  //     });
+  //     if(success) form.fields['email']!.reset();
+  //
   //   } catch (err, _) {
   //     logger.e(err);
-  //     setState(() => onFailed = true);
+  //     if (context.mounted) {
+  //       showErrorDialog(
+  //         context,
+  //         title: 'Reset error',
+  //         message: 'Unable to reset your password. Try again in a few seconds.',
+  //       );
+  //     }
+  //   } finally {
+  //     if (context.mounted) setState(() => isLoading = false);
   //   }
-  // }
-  //
-  // Widget buildSignIn() {
-  //   return TextButton(
-  //     onPressed: () => context.goNamed('index'),
-  //     style: TextButton.styleFrom(
-  //       padding: const EdgeInsets.symmetric(horizontal: 7),
-  //     ),
-  //     child: const Text('Back to Sign-in',
-  //         style: TextStyle(
-  //           fontWeight: FontWeight.bold,
-  //           color: Colors.grey,
-  //         )),
-  //   );
   // }
 }

@@ -6,11 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/core.dart';
 import 'core/routes.dart';
 
 // TODO: Show dialog if anonymous user tries to sign-out saying data will be lost
+// BUG: Cannot link anonymous to google
 
 Future<void> sharedMain({
   required Flavor flavor,
@@ -27,7 +29,8 @@ Future<void> sharedMain({
     final useEmulator = ['true', 't', 'yes', 'y', '1'].contains(emulatorEnv.toLowerCase());
 
     // Initialize
-    await Startup.initFirebase(useEmulator);
+    // await Startup.initFirebase(useEmulator);
+    await Startup.initSupabase();
     final prefs = await SharedPreferences.getInstance();
     final settings = Settings(flavor: flavor, appName: appName);
     final packageInfo = await PackageInfo.fromPlatform();
@@ -59,7 +62,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final prefs = ref.watch(prefsProvider);
-    final user = FirebaseAuth.instance.currentUser;
+    final session = Supabase.instance.client.auth.currentSession;
     final config = ref.watch(appConfigProvider);
     final routes = ref.watch(routesProvider(defaultRole, prefs));
 
@@ -79,7 +82,7 @@ class App extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       darkTheme: IndexTheme.dark,
       themeMode:
-          user == null ? ThemeMode.light : (config.darkMode ? ThemeMode.dark : ThemeMode.light),
+          session == null ? ThemeMode.light : (config.darkMode ? ThemeMode.dark : ThemeMode.light),
     );
   }
 }

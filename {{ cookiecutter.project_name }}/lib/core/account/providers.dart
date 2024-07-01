@@ -3,6 +3,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:path/path.dart' as path;
 
 import '../core.dart';
 
@@ -11,75 +13,34 @@ part 'providers.g.dart';
 final accountProvider = StateProvider<Account>((ref) => Account.empty());
 
 @riverpod
-class UploadAvatar extends _$UploadAvatar {
+class Upload extends _$Upload {
   @override
-  FutureOr<bool?> build() async => null;
+  FutureOr<String?> build() async => null;
 
-  Future<void> upload(File file) async {
-    Account account = ref.watch(accountProvider);
-    bool success = false;
+  Future<String> upload({
+    required String bucketName,
+    required File file,
+    required String folderPath,
+    String prefix = '',
+    String? name,
+  }) async {
+    final supabase = Supabase.instance.client;
+    final settings = ref.watch(settingsProvider);
 
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      await Future.delayed(const Duration(seconds: 5));
+    name = name ?? const Uuid().v4();
+    final ext = path.extension(file.path).toLowerCase();
+    final fullpath = '$folderPath/$prefix$name$ext';
+    final bucket = supabase.storage.from(bucketName);
 
-      // Upload
-      final imageId = const Uuid().v4();
-      final task = await AuthService.putFile(
-        file: file,
-        path: 'accounts/${account.uid}/avatar-$imageId',
-        metadata: {
-          'uid': account.uid,
-          'location': 'profile',
-          'type': 'avatar',
-        },
-      );
-
-      // TODO: Upload preloader
-      task.snapshotEvents.listen((event) async {
-        switch (event.state) {
-          case TaskState.success:
-            final imageUrl = await task.snapshot.ref.getDownloadURL();
-            success = await AccountService.save(account.uid, {
-              'avatar': imageUrl,
-            });
-            if (success) {
-              account = account.copyWith(avatar: imageUrl);
-              ref.read(accountProvider.notifier).update((_) => account);
-              break;
-            }
-            throw Exception('AVATAR_UPLOAD_1_DB_0');
-          case TaskState.error:
-            logger.e('[AVATAR_UPLOAD_FAILED]');
-            throw UploadFailedException('AVATAR_UPLOAD_FAILED');
-          default:
-          // Do nothing
-        }
-      });
-
-      return success;
-    });
+    // await Future.delayed(const Duration(seconds: 2));
+    await bucket.upload(fullpath, file);
+    final signedUrl = await bucket.createSignedUrl(fullpath, settings.storageTtl);
+    return signedUrl;
   }
-
-  // Future<void> clear() async {
-  //   Account account = ref.watch(accountProvider);
-  //
-  //   state = const AsyncLoading();
-  //   state = await AsyncValue.guard(() async {
-  //     bool success = await AccountService.save(account.uid, {
-  //       'avatar': '',
-  //     });
-  //     if (success) {
-  //       account = account.copyWith(avatar: '');
-  //       ref.read(accountProvider.notifier).update((_) => account);
-  //     }
-  //     return success;
-  //   });
-  // }
 }
 
 @riverpod
-class UploadCover extends _$UploadCover {
+class AvatarUpload extends _$AvatarUpload {
   @override
   FutureOr<bool?> build() async => null;
 
@@ -89,41 +50,63 @@ class UploadCover extends _$UploadCover {
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await Future.delayed(const Duration(seconds: 10));
+      // await Future.delayed(const Duration(seconds: 2));
+      final folderPath = 'accounts/${account.id}/';
+      final signedUrl = await ref
+          .read(uploadProvider.notifier)
+          .upload(bucketName: 'sandbox', file: file, folderPath: folderPath, prefix: 'avatar-');
 
-      // Upload
-      final imageId = const Uuid().v4();
-      final task = await AuthService.putFile(
-        file: file,
-        path: 'accounts/${account.uid}/cover-profile-$imageId',
-        metadata: {
-          'uid': account.uid,
-          'location': 'profile',
-          'type': 'cover',
-        },
-      );
+      success = await AccountService.save(account.id!, {'avatar': signedUrl});
+      if (success) {
+        account = account.copyWith(avatar: signedUrl);
+        ref.read(accountProvider.notifier).update((_) => account);
+      }
 
-      // TODO: Upload preloader
-      task.snapshotEvents.listen((event) async {
-        switch (event.state) {
-          case TaskState.success:
-            final imageUrl = await task.snapshot.ref.getDownloadURL();
-            success = await AccountService.save(account.uid, {
-              'coverProfile': imageUrl,
-            });
-            if (success) {
-              account = account.copyWith(coverProfile: imageUrl);
-              ref.read(accountProvider.notifier).update((_) => account);
-              break;
-            }
-            throw Exception('COVER_UPLOAD_1_DB_0');
-          case TaskState.error:
-            logger.e('[COVER_UPLOAD_FAILED]');
-            throw UploadFailedException('COVER_UPLOAD_FAILED');
-          default:
-          // Do nothing
-        }
+      return success;
+    });
+  }
+
+  Future<void> clear() async {
+    Account account = ref.watch(accountProvider);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final success = await AccountService.save(account.id!, {
+        'avatar': '',
       });
+      if (success) {
+        account = account.copyWith(avatar: '');
+        ref.read(accountProvider.notifier).update((_) => account);
+      }
+      return success;
+    });
+  }
+}
+
+@riverpod
+class CoverUpload extends _$CoverUpload {
+  @override
+  FutureOr<bool?> build() async => null;
+
+  Future<void> upload(File file) async {
+    Account account = ref.watch(accountProvider);
+    bool success = false;
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      // await Future.delayed(const Duration(seconds: 2));
+      final folderPath = 'accounts/${account.id}/';
+      final signedUrl = await ref
+          .read(uploadProvider.notifier)
+          .upload(bucketName: 'sandbox', file: file, folderPath: folderPath, prefix: 'cover-');
+
+      success = await AccountService.save(account.id!, {
+        'cover_profile': signedUrl,
+      });
+      if (success) {
+        account = account.copyWith(coverProfile: signedUrl);
+        ref.read(accountProvider.notifier).update((_) => account);
+      }
 
       return success;
     });
@@ -134,12 +117,11 @@ class UploadCover extends _$UploadCover {
   //
   //   state = const AsyncLoading();
   //   state = await AsyncValue.guard(() async {
-  //     bool success = await AccountService.save(account.uid, {
-  //       'coverProfile': '',
+  //     final success = await AccountService.save(account.id!, {
+  //       'cover_profile': '',
   //     });
   //     if (success) {
-  //       account = account.copyWith(coverProfile: '');
-  //       // TODO: Update secstor?
+  //       account = account.copyWith(avatar: '');
   //       ref.read(accountProvider.notifier).update((_) => account);
   //     }
   //     return success;

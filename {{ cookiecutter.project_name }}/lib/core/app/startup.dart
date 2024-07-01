@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
@@ -9,11 +8,28 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../firebase_options.dart';
 import '../core.dart';
 
 class Startup {
+  static Future<void> initSupabase() async {
+    final enableLocalSupabase = dotenv.env['ENABLE_LOCAL_SUPABASE'] ?? '';
+    final enableLocal = enableLocalSupabase.toLowerCase() == 'true';
+
+    enableLocal
+        ? await Supabase.initialize(
+            url: dotenv.env['DEV_SUPABASE_URL'] ?? '',
+            anonKey: dotenv.env['DEV_SUPABASE_KEY'] ?? '',
+          )
+        : await Supabase.initialize(
+            url: dotenv.env['PROD_SUPABASE_URL'] ?? '',
+            anonKey: dotenv.env['PROD_SUPABASE_KEY'] ?? '',
+          );
+  }
+
   static Future<void> initFirebase(bool useEmulator) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,

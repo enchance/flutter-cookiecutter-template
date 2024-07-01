@@ -21,12 +21,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
     final account = ref.watch(accountProvider);
     // logger.d(account);
 
-    bool showLinkButton = false;
-    if (!account.authTypes.contains(AuthType.google)) showLinkButton = true;
+    // bool showLinkButton = false;
+    // if (!account.providers.contains(AuthType.google)) showLinkButton = true;
+    // logger.d(account);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(kDebugMode ? account.uid : settings.appName),
+        title: Text(kDebugMode ? account.id ?? 'XXX' : settings.appName),
         actions: const [
           AppbarMenu(),
         ],
@@ -38,10 +39,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              TextButton(
+                onPressed: () => signOut(context, ref),
+                child: const Text('Sign-out'),
+              ),
               const Text('View'),
               if (account.email.isNotEmpty) buildAccountData(),
-              const SizedBox(height: 10),
-              if (showLinkButton) const GoogleLinkAccountButton(),
+              // const SizedBox(height: 10),
+              // if (account.canLinkAccount) const GoogleLinkAccountButton(),
             ],
           ),
         ),

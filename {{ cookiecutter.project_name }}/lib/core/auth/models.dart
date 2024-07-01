@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../core.dart';
 
@@ -13,25 +14,31 @@ class Account with _$Account {
   const Account._();
 
   const factory Account({
-    @Default('') String uid,
-    required final String email,
+    final String? id,
+    @NullConverter() required final String email,
     required final String fullname,
-    @AuthTypeConverter() required final List<AuthType> authTypes,
-    final String? phone,
-    final Role? role,
+    required final String phone,
     @Default('') final String avatar,
-    @Default('') final String username,
     @Default('') final String display,
-    @Default('') final String coverProfile,
-    @TimestampConverter() required DateTime? bannedAt,
-    @TimestampConverter() required DateTime? createdAt,
+    @Default('') @NullConverter() final String username,
+    @Default('') final String gender,
+    @Default('') final String status,
+    DateTime? birthday,
+    @AuthTypeConverter() required final Set<AuthType> providers,
+    @RolesConverter() required final Set<Role> roles,
+    @JsonKey(name: 'provider_id') @Default('') final String providerId,
+    @JsonKey(name: 'cover_profile') @Default('') final String coverProfile,
+    @JsonKey(name: 'banned_at') DateTime? bannedAt,
+    @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    @JsonKey(name: 'created_at') DateTime? createdAt,
   }) = _Account;
 
   factory Account.fromJson(Map<String, Object?> json) => _$AccountFromJson(json);
 
   factory Account.create({
-    required String uid,
-    required AuthType authType,
+    required AuthType provider,
+    String? id,
     String? email,
     String? fullname,
     String? phone,
@@ -41,16 +48,14 @@ class Account with _$Account {
   }) {
     final (firstname, _) = splitName(fullname ?? '');
     return Account(
-      uid: uid,
+      id: id,
       email: email ?? '',
       fullname: fullname ?? firstname,
-      authTypes: [authType],
       phone: phone ?? '',
-      display: display ?? firstname,
-      role: role,
       avatar: avatar ?? '',
-      bannedAt: null,
-      createdAt: DateTime.now(),
+      display: display ?? firstname,
+      providers: {provider},
+      roles: {role},
     );
   }
 
@@ -58,32 +63,52 @@ class Account with _$Account {
     return const Account(
       email: '',
       fullname: '',
-      authTypes: [],
-      bannedAt: null,
-      createdAt: null,
+      phone: '',
+      providers: {},
+      roles: {Role.starter},
     );
   }
 
-  bool get isStarter => role == Role.starter;
+  bool get isStarter => roles.contains(Role.starter);
 
-  bool get isModerator => role == Role.moderator;
+  bool get isModerator => roles.contains(Role.moderator);
 
-  bool get isAdmin => role == Role.admin;
+  bool get isAdmin => roles.contains(Role.admin);
 
-  bool get isAnonymous => email.isEmpty && authTypes.contains(AuthType.anonymous);
+  bool get isAnonymous => email.isEmpty && providers.contains(AuthType.anonymous);
 
-  bool get canEditEmail => authTypes.contains(AuthType.email);
+  bool get canEditEmail => providers.contains(AuthType.email);
+
+  bool get canLinkAccount => !providers.contains(AuthType.google);
+
+  bool get isEmpty => providers.isEmpty && email.isEmpty;
 }
 
-class AuthAccount {
-  final User? user;
-  final Account? account;
+// class AuthAccount {
+//   final Session? session;
+//   final Account? account;
+//
+//   const AuthAccount([this.session, this.account]);
+//
+//   bool get hasSession => session != null;
+//
+//   bool get hasAccount => hasSession && account != null;
+// }
 
-  const AuthAccount([this.user, this.account]);
+class NullConverter implements JsonConverter<String, String?> {
+  const NullConverter();
 
-  bool get hasUser => user != null;
+  @override
+  String fromJson(String? val) {
+    if (val == null) return '';
+    return val;
+  }
 
-  bool get hasAccount => hasUser && account != null;
+  @override
+  String? toJson(String val) {
+    if (val.isEmpty) return null;
+    return val;
+  }
 }
 
 class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
@@ -94,22 +119,6 @@ class TimestampConverter implements JsonConverter<DateTime, Timestamp> {
 
   @override
   Timestamp toJson(DateTime dt) => Timestamp.fromDate(dt);
-}
-
-class RoleConverter implements JsonConverter<Role, String> {
-  const RoleConverter();
-
-  @override
-  Role fromJson(String role) {
-    try {
-      return Role.values.byName(role);
-    } catch (err, _) {
-      return defaultRole;
-    }
-  }
-
-  @override
-  String toJson(Role role) => role.name;
 }
 
 class GridSizeConverter implements JsonConverter<GridSize, String> {
@@ -144,14 +153,26 @@ class TextSizeConverter implements JsonConverter<TextSize, String> {
   String toJson(TextSize val) => val.name;
 }
 
-class AuthTypeConverter implements JsonConverter<List<AuthType>, List> {
+class AuthTypeConverter implements JsonConverter<Set<AuthType>, List> {
   const AuthTypeConverter();
 
   @override
-  List<AuthType> fromJson(List val) {
-    return val.map((item) => AuthType.values.byName(item as String)).toList();
+  Set<AuthType> fromJson(List val) {
+    return val.map((item) => AuthType.values.byName(item as String)).toSet();
   }
 
   @override
-  List toJson(List<AuthType> val) => val.map((item) => item.name).toList();
+  List toJson(Set<AuthType> val) => val.map((item) => item.name).toList();
+}
+
+class RolesConverter implements JsonConverter<Set<Role>, List> {
+  const RolesConverter();
+
+  @override
+  Set<Role> fromJson(List val) {
+    return val.map((item) => Role.values.byName(item as String)).toSet();
+  }
+
+  @override
+  List toJson(Set<Role> val) => val.map((item) => item.name).toList();
 }

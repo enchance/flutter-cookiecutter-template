@@ -8,54 +8,56 @@ part of 'models.dart';
 
 _$AccountImpl _$$AccountImplFromJson(Map<String, dynamic> json) =>
     _$AccountImpl(
-      uid: json['uid'] as String? ?? '',
-      email: json['email'] as String,
+      id: json['id'] as String?,
+      email: const NullConverter().fromJson(json['email'] as String?),
       fullname: json['fullname'] as String,
-      authTypes: const AuthTypeConverter().fromJson(json['authTypes'] as List),
-      phone: json['phone'] as String?,
-      role: $enumDecodeNullable(_$RoleEnumMap, json['role']),
+      phone: json['phone'] as String,
       avatar: json['avatar'] as String? ?? '',
-      username: json['username'] as String? ?? '',
       display: json['display'] as String? ?? '',
-      coverProfile: json['coverProfile'] as String? ?? '',
-      bannedAt: _$JsonConverterFromJson<Timestamp, DateTime>(
-          json['bannedAt'], const TimestampConverter().fromJson),
-      createdAt: _$JsonConverterFromJson<Timestamp, DateTime>(
-          json['createdAt'], const TimestampConverter().fromJson),
+      username: json['username'] == null
+          ? ''
+          : const NullConverter().fromJson(json['username'] as String?),
+      gender: json['gender'] as String? ?? '',
+      status: json['status'] as String? ?? '',
+      birthday: json['birthday'] == null
+          ? null
+          : DateTime.parse(json['birthday'] as String),
+      providers: const AuthTypeConverter().fromJson(json['providers'] as List),
+      roles: const RolesConverter().fromJson(json['roles'] as List),
+      providerId: json['provider_id'] as String? ?? '',
+      coverProfile: json['cover_profile'] as String? ?? '',
+      bannedAt: json['banned_at'] == null
+          ? null
+          : DateTime.parse(json['banned_at'] as String),
+      deletedAt: json['deleted_at'] == null
+          ? null
+          : DateTime.parse(json['deleted_at'] as String),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.parse(json['updated_at'] as String),
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$$AccountImplToJson(_$AccountImpl instance) =>
     <String, dynamic>{
-      'uid': instance.uid,
-      'email': instance.email,
+      'id': instance.id,
+      'email': const NullConverter().toJson(instance.email),
       'fullname': instance.fullname,
-      'authTypes': const AuthTypeConverter().toJson(instance.authTypes),
       'phone': instance.phone,
-      'role': _$RoleEnumMap[instance.role],
       'avatar': instance.avatar,
-      'username': instance.username,
       'display': instance.display,
-      'coverProfile': instance.coverProfile,
-      'bannedAt': _$JsonConverterToJson<Timestamp, DateTime>(
-          instance.bannedAt, const TimestampConverter().toJson),
-      'createdAt': _$JsonConverterToJson<Timestamp, DateTime>(
-          instance.createdAt, const TimestampConverter().toJson),
+      'username': const NullConverter().toJson(instance.username),
+      'gender': instance.gender,
+      'status': instance.status,
+      'birthday': instance.birthday?.toIso8601String(),
+      'providers': const AuthTypeConverter().toJson(instance.providers),
+      'roles': const RolesConverter().toJson(instance.roles),
+      'provider_id': instance.providerId,
+      'cover_profile': instance.coverProfile,
+      'banned_at': instance.bannedAt?.toIso8601String(),
+      'deleted_at': instance.deletedAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
+      'created_at': instance.createdAt?.toIso8601String(),
     };
-
-const _$RoleEnumMap = {
-  Role.starter: 'starter',
-  Role.moderator: 'moderator',
-  Role.admin: 'admin',
-};
-
-Value? _$JsonConverterFromJson<Json, Value>(
-  Object? json,
-  Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);
-
-Json? _$JsonConverterToJson<Json, Value>(
-  Value? value,
-  Json? Function(Value value) toJson,
-) =>
-    value == null ? null : toJson(value);

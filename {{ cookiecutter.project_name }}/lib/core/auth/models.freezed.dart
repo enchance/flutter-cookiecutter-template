@@ -20,20 +20,33 @@ Account _$AccountFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Account {
-  String get uid => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
+  @NullConverter()
   String get email => throw _privateConstructorUsedError;
   String get fullname => throw _privateConstructorUsedError;
-  @AuthTypeConverter()
-  List<AuthType> get authTypes => throw _privateConstructorUsedError;
-  String? get phone => throw _privateConstructorUsedError;
-  Role? get role => throw _privateConstructorUsedError;
+  String get phone => throw _privateConstructorUsedError;
   String get avatar => throw _privateConstructorUsedError;
-  String get username => throw _privateConstructorUsedError;
   String get display => throw _privateConstructorUsedError;
+  @NullConverter()
+  String get username => throw _privateConstructorUsedError;
+  String get gender => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
+  DateTime? get birthday => throw _privateConstructorUsedError;
+  @AuthTypeConverter()
+  Set<AuthType> get providers => throw _privateConstructorUsedError;
+  @RolesConverter()
+  Set<Role> get roles => throw _privateConstructorUsedError;
+  @JsonKey(name: 'provider_id')
+  String get providerId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'cover_profile')
   String get coverProfile => throw _privateConstructorUsedError;
-  @TimestampConverter()
+  @JsonKey(name: 'banned_at')
   DateTime? get bannedAt => throw _privateConstructorUsedError;
-  @TimestampConverter()
+  @JsonKey(name: 'deleted_at')
+  DateTime? get deletedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'updated_at')
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,18 +60,24 @@ abstract class $AccountCopyWith<$Res> {
       _$AccountCopyWithImpl<$Res, Account>;
   @useResult
   $Res call(
-      {String uid,
-      String email,
+      {String? id,
+      @NullConverter() String email,
       String fullname,
-      @AuthTypeConverter() List<AuthType> authTypes,
-      String? phone,
-      Role? role,
+      String phone,
       String avatar,
-      String username,
       String display,
-      String coverProfile,
-      @TimestampConverter() DateTime? bannedAt,
-      @TimestampConverter() DateTime? createdAt});
+      @NullConverter() String username,
+      String gender,
+      String status,
+      DateTime? birthday,
+      @AuthTypeConverter() Set<AuthType> providers,
+      @RolesConverter() Set<Role> roles,
+      @JsonKey(name: 'provider_id') String providerId,
+      @JsonKey(name: 'cover_profile') String coverProfile,
+      @JsonKey(name: 'banned_at') DateTime? bannedAt,
+      @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+      @JsonKey(name: 'updated_at') DateTime? updatedAt,
+      @JsonKey(name: 'created_at') DateTime? createdAt});
 }
 
 /// @nodoc
@@ -74,24 +93,30 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? uid = null,
+    Object? id = freezed,
     Object? email = null,
     Object? fullname = null,
-    Object? authTypes = null,
-    Object? phone = freezed,
-    Object? role = freezed,
+    Object? phone = null,
     Object? avatar = null,
-    Object? username = null,
     Object? display = null,
+    Object? username = null,
+    Object? gender = null,
+    Object? status = null,
+    Object? birthday = freezed,
+    Object? providers = null,
+    Object? roles = null,
+    Object? providerId = null,
     Object? coverProfile = null,
     Object? bannedAt = freezed,
+    Object? deletedAt = freezed,
+    Object? updatedAt = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
-      uid: null == uid
-          ? _value.uid
-          : uid // ignore: cast_nullable_to_non_nullable
-              as String,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -100,29 +125,45 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
           ? _value.fullname
           : fullname // ignore: cast_nullable_to_non_nullable
               as String,
-      authTypes: null == authTypes
-          ? _value.authTypes
-          : authTypes // ignore: cast_nullable_to_non_nullable
-              as List<AuthType>,
-      phone: freezed == phone
+      phone: null == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      role: freezed == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as Role?,
+              as String,
       avatar: null == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
+              as String,
+      display: null == display
+          ? _value.display
+          : display // ignore: cast_nullable_to_non_nullable
               as String,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      display: null == display
-          ? _value.display
-          : display // ignore: cast_nullable_to_non_nullable
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      birthday: freezed == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      providers: null == providers
+          ? _value.providers
+          : providers // ignore: cast_nullable_to_non_nullable
+              as Set<AuthType>,
+      roles: null == roles
+          ? _value.roles
+          : roles // ignore: cast_nullable_to_non_nullable
+              as Set<Role>,
+      providerId: null == providerId
+          ? _value.providerId
+          : providerId // ignore: cast_nullable_to_non_nullable
               as String,
       coverProfile: null == coverProfile
           ? _value.coverProfile
@@ -131,6 +172,14 @@ class _$AccountCopyWithImpl<$Res, $Val extends Account>
       bannedAt: freezed == bannedAt
           ? _value.bannedAt
           : bannedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      deletedAt: freezed == deletedAt
+          ? _value.deletedAt
+          : deletedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -148,18 +197,24 @@ abstract class _$$AccountImplCopyWith<$Res> implements $AccountCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String uid,
-      String email,
+      {String? id,
+      @NullConverter() String email,
       String fullname,
-      @AuthTypeConverter() List<AuthType> authTypes,
-      String? phone,
-      Role? role,
+      String phone,
       String avatar,
-      String username,
       String display,
-      String coverProfile,
-      @TimestampConverter() DateTime? bannedAt,
-      @TimestampConverter() DateTime? createdAt});
+      @NullConverter() String username,
+      String gender,
+      String status,
+      DateTime? birthday,
+      @AuthTypeConverter() Set<AuthType> providers,
+      @RolesConverter() Set<Role> roles,
+      @JsonKey(name: 'provider_id') String providerId,
+      @JsonKey(name: 'cover_profile') String coverProfile,
+      @JsonKey(name: 'banned_at') DateTime? bannedAt,
+      @JsonKey(name: 'deleted_at') DateTime? deletedAt,
+      @JsonKey(name: 'updated_at') DateTime? updatedAt,
+      @JsonKey(name: 'created_at') DateTime? createdAt});
 }
 
 /// @nodoc
@@ -173,24 +228,30 @@ class __$$AccountImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? uid = null,
+    Object? id = freezed,
     Object? email = null,
     Object? fullname = null,
-    Object? authTypes = null,
-    Object? phone = freezed,
-    Object? role = freezed,
+    Object? phone = null,
     Object? avatar = null,
-    Object? username = null,
     Object? display = null,
+    Object? username = null,
+    Object? gender = null,
+    Object? status = null,
+    Object? birthday = freezed,
+    Object? providers = null,
+    Object? roles = null,
+    Object? providerId = null,
     Object? coverProfile = null,
     Object? bannedAt = freezed,
+    Object? deletedAt = freezed,
+    Object? updatedAt = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(_$AccountImpl(
-      uid: null == uid
-          ? _value.uid
-          : uid // ignore: cast_nullable_to_non_nullable
-              as String,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -199,29 +260,45 @@ class __$$AccountImplCopyWithImpl<$Res>
           ? _value.fullname
           : fullname // ignore: cast_nullable_to_non_nullable
               as String,
-      authTypes: null == authTypes
-          ? _value._authTypes
-          : authTypes // ignore: cast_nullable_to_non_nullable
-              as List<AuthType>,
-      phone: freezed == phone
+      phone: null == phone
           ? _value.phone
           : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      role: freezed == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as Role?,
+              as String,
       avatar: null == avatar
           ? _value.avatar
           : avatar // ignore: cast_nullable_to_non_nullable
+              as String,
+      display: null == display
+          ? _value.display
+          : display // ignore: cast_nullable_to_non_nullable
               as String,
       username: null == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
               as String,
-      display: null == display
-          ? _value.display
-          : display // ignore: cast_nullable_to_non_nullable
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      birthday: freezed == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      providers: null == providers
+          ? _value._providers
+          : providers // ignore: cast_nullable_to_non_nullable
+              as Set<AuthType>,
+      roles: null == roles
+          ? _value._roles
+          : roles // ignore: cast_nullable_to_non_nullable
+              as Set<Role>,
+      providerId: null == providerId
+          ? _value.providerId
+          : providerId // ignore: cast_nullable_to_non_nullable
               as String,
       coverProfile: null == coverProfile
           ? _value.coverProfile
@@ -230,6 +307,14 @@ class __$$AccountImplCopyWithImpl<$Res>
       bannedAt: freezed == bannedAt
           ? _value.bannedAt
           : bannedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      deletedAt: freezed == deletedAt
+          ? _value.deletedAt
+          : deletedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -243,66 +328,98 @@ class __$$AccountImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$AccountImpl extends _Account {
   const _$AccountImpl(
-      {this.uid = '',
-      required this.email,
+      {this.id,
+      @NullConverter() required this.email,
       required this.fullname,
-      @AuthTypeConverter() required final List<AuthType> authTypes,
-      this.phone,
-      this.role,
+      required this.phone,
       this.avatar = '',
-      this.username = '',
       this.display = '',
-      this.coverProfile = '',
-      @TimestampConverter() required this.bannedAt,
-      @TimestampConverter() required this.createdAt})
-      : _authTypes = authTypes,
+      @NullConverter() this.username = '',
+      this.gender = '',
+      this.status = '',
+      this.birthday,
+      @AuthTypeConverter() required final Set<AuthType> providers,
+      @RolesConverter() required final Set<Role> roles,
+      @JsonKey(name: 'provider_id') this.providerId = '',
+      @JsonKey(name: 'cover_profile') this.coverProfile = '',
+      @JsonKey(name: 'banned_at') this.bannedAt,
+      @JsonKey(name: 'deleted_at') this.deletedAt,
+      @JsonKey(name: 'updated_at') this.updatedAt,
+      @JsonKey(name: 'created_at') this.createdAt})
+      : _providers = providers,
+        _roles = roles,
         super._();
 
   factory _$AccountImpl.fromJson(Map<String, dynamic> json) =>
       _$$AccountImplFromJson(json);
 
   @override
-  @JsonKey()
-  final String uid;
+  final String? id;
   @override
+  @NullConverter()
   final String email;
   @override
   final String fullname;
-  final List<AuthType> _authTypes;
   @override
-  @AuthTypeConverter()
-  List<AuthType> get authTypes {
-    if (_authTypes is EqualUnmodifiableListView) return _authTypes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_authTypes);
-  }
-
-  @override
-  final String? phone;
-  @override
-  final Role? role;
+  final String phone;
   @override
   @JsonKey()
   final String avatar;
   @override
   @JsonKey()
-  final String username;
-  @override
-  @JsonKey()
   final String display;
   @override
   @JsonKey()
+  @NullConverter()
+  final String username;
+  @override
+  @JsonKey()
+  final String gender;
+  @override
+  @JsonKey()
+  final String status;
+  @override
+  final DateTime? birthday;
+  final Set<AuthType> _providers;
+  @override
+  @AuthTypeConverter()
+  Set<AuthType> get providers {
+    if (_providers is EqualUnmodifiableSetView) return _providers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_providers);
+  }
+
+  final Set<Role> _roles;
+  @override
+  @RolesConverter()
+  Set<Role> get roles {
+    if (_roles is EqualUnmodifiableSetView) return _roles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_roles);
+  }
+
+  @override
+  @JsonKey(name: 'provider_id')
+  final String providerId;
+  @override
+  @JsonKey(name: 'cover_profile')
   final String coverProfile;
   @override
-  @TimestampConverter()
+  @JsonKey(name: 'banned_at')
   final DateTime? bannedAt;
   @override
-  @TimestampConverter()
+  @JsonKey(name: 'deleted_at')
+  final DateTime? deletedAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  final DateTime? updatedAt;
+  @override
+  @JsonKey(name: 'created_at')
   final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'Account(uid: $uid, email: $email, fullname: $fullname, authTypes: $authTypes, phone: $phone, role: $role, avatar: $avatar, username: $username, display: $display, coverProfile: $coverProfile, bannedAt: $bannedAt, createdAt: $createdAt)';
+    return 'Account(id: $id, email: $email, fullname: $fullname, phone: $phone, avatar: $avatar, display: $display, username: $username, gender: $gender, status: $status, birthday: $birthday, providers: $providers, roles: $roles, providerId: $providerId, coverProfile: $coverProfile, bannedAt: $bannedAt, deletedAt: $deletedAt, updatedAt: $updatedAt, createdAt: $createdAt)';
   }
 
   @override
@@ -310,22 +427,32 @@ class _$AccountImpl extends _Account {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$AccountImpl &&
-            (identical(other.uid, uid) || other.uid == uid) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.fullname, fullname) ||
                 other.fullname == fullname) &&
-            const DeepCollectionEquality()
-                .equals(other._authTypes, _authTypes) &&
             (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.role, role) || other.role == role) &&
             (identical(other.avatar, avatar) || other.avatar == avatar) &&
+            (identical(other.display, display) || other.display == display) &&
             (identical(other.username, username) ||
                 other.username == username) &&
-            (identical(other.display, display) || other.display == display) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.birthday, birthday) ||
+                other.birthday == birthday) &&
+            const DeepCollectionEquality()
+                .equals(other._providers, _providers) &&
+            const DeepCollectionEquality().equals(other._roles, _roles) &&
+            (identical(other.providerId, providerId) ||
+                other.providerId == providerId) &&
             (identical(other.coverProfile, coverProfile) ||
                 other.coverProfile == coverProfile) &&
             (identical(other.bannedAt, bannedAt) ||
                 other.bannedAt == bannedAt) &&
+            (identical(other.deletedAt, deletedAt) ||
+                other.deletedAt == deletedAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -334,17 +461,23 @@ class _$AccountImpl extends _Account {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      uid,
+      id,
       email,
       fullname,
-      const DeepCollectionEquality().hash(_authTypes),
       phone,
-      role,
       avatar,
-      username,
       display,
+      username,
+      gender,
+      status,
+      birthday,
+      const DeepCollectionEquality().hash(_providers),
+      const DeepCollectionEquality().hash(_roles),
+      providerId,
       coverProfile,
       bannedAt,
+      deletedAt,
+      updatedAt,
       createdAt);
 
   @JsonKey(ignore: true)
@@ -363,49 +496,73 @@ class _$AccountImpl extends _Account {
 
 abstract class _Account extends Account {
   const factory _Account(
-          {final String uid,
-          required final String email,
-          required final String fullname,
-          @AuthTypeConverter() required final List<AuthType> authTypes,
-          final String? phone,
-          final Role? role,
-          final String avatar,
-          final String username,
-          final String display,
-          final String coverProfile,
-          @TimestampConverter() required final DateTime? bannedAt,
-          @TimestampConverter() required final DateTime? createdAt}) =
-      _$AccountImpl;
+      {final String? id,
+      @NullConverter() required final String email,
+      required final String fullname,
+      required final String phone,
+      final String avatar,
+      final String display,
+      @NullConverter() final String username,
+      final String gender,
+      final String status,
+      final DateTime? birthday,
+      @AuthTypeConverter() required final Set<AuthType> providers,
+      @RolesConverter() required final Set<Role> roles,
+      @JsonKey(name: 'provider_id') final String providerId,
+      @JsonKey(name: 'cover_profile') final String coverProfile,
+      @JsonKey(name: 'banned_at') final DateTime? bannedAt,
+      @JsonKey(name: 'deleted_at') final DateTime? deletedAt,
+      @JsonKey(name: 'updated_at') final DateTime? updatedAt,
+      @JsonKey(name: 'created_at') final DateTime? createdAt}) = _$AccountImpl;
   const _Account._() : super._();
 
   factory _Account.fromJson(Map<String, dynamic> json) = _$AccountImpl.fromJson;
 
   @override
-  String get uid;
+  String? get id;
   @override
+  @NullConverter()
   String get email;
   @override
   String get fullname;
   @override
-  @AuthTypeConverter()
-  List<AuthType> get authTypes;
-  @override
-  String? get phone;
-  @override
-  Role? get role;
+  String get phone;
   @override
   String get avatar;
   @override
-  String get username;
-  @override
   String get display;
   @override
+  @NullConverter()
+  String get username;
+  @override
+  String get gender;
+  @override
+  String get status;
+  @override
+  DateTime? get birthday;
+  @override
+  @AuthTypeConverter()
+  Set<AuthType> get providers;
+  @override
+  @RolesConverter()
+  Set<Role> get roles;
+  @override
+  @JsonKey(name: 'provider_id')
+  String get providerId;
+  @override
+  @JsonKey(name: 'cover_profile')
   String get coverProfile;
   @override
-  @TimestampConverter()
+  @JsonKey(name: 'banned_at')
   DateTime? get bannedAt;
   @override
-  @TimestampConverter()
+  @JsonKey(name: 'deleted_at')
+  DateTime? get deletedAt;
+  @override
+  @JsonKey(name: 'updated_at')
+  DateTime? get updatedAt;
+  @override
+  @JsonKey(name: 'created_at')
   DateTime? get createdAt;
   @override
   @JsonKey(ignore: true)

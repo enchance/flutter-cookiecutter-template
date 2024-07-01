@@ -220,8 +220,8 @@ class BaseTheme {
           inputDecorationTheme: InputDecorationTheme(
             floatingLabelStyle: TextStyle(
               color: onSurface,
-              fontWeight: FontWeight.bold,
-              fontSize: bodyLargeFontSize,
+              // fontWeight: FontWeight.bold,
+              // fontSize: bodyLargeFontSize,
             ),
           ),
         ),

@@ -6,35 +6,50 @@ part of 'providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$uploadAvatarHash() => r'f79a93bca70de8c608830a5440ab66714397a510';
+String _$uploadHash() => r'683982a5b99c3d8a60471abd9a18f649c40956be';
 
-/// See also [UploadAvatar].
-@ProviderFor(UploadAvatar)
-final uploadAvatarProvider =
-    AutoDisposeAsyncNotifierProvider<UploadAvatar, bool?>.internal(
-  UploadAvatar.new,
-  name: r'uploadAvatarProvider',
+/// See also [Upload].
+@ProviderFor(Upload)
+final uploadProvider =
+    AutoDisposeAsyncNotifierProvider<Upload, String?>.internal(
+  Upload.new,
+  name: r'uploadProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$uploadAvatarHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$uploadHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$UploadAvatar = AutoDisposeAsyncNotifier<bool?>;
-String _$uploadCoverHash() => r'ff2e1d3466e3ad41b14a02f9ff95febee199cf14';
+typedef _$Upload = AutoDisposeAsyncNotifier<String?>;
+String _$avatarUploadHash() => r'e9eeaf73defa34d05d01d8c5713b60d501d52348';
 
-/// See also [UploadCover].
-@ProviderFor(UploadCover)
-final uploadCoverProvider =
-    AutoDisposeAsyncNotifierProvider<UploadCover, bool?>.internal(
-  UploadCover.new,
-  name: r'uploadCoverProvider',
+/// See also [AvatarUpload].
+@ProviderFor(AvatarUpload)
+final avatarUploadProvider =
+    AutoDisposeAsyncNotifierProvider<AvatarUpload, bool?>.internal(
+  AvatarUpload.new,
+  name: r'avatarUploadProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$uploadCoverHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$avatarUploadHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$UploadCover = AutoDisposeAsyncNotifier<bool?>;
+typedef _$AvatarUpload = AutoDisposeAsyncNotifier<bool?>;
+String _$coverUploadHash() => r'fa4a200068024d52e7779b92aa2d0cdcb8d58055';
+
+/// See also [CoverUpload].
+@ProviderFor(CoverUpload)
+final coverUploadProvider =
+    AutoDisposeAsyncNotifierProvider<CoverUpload, bool?>.internal(
+  CoverUpload.new,
+  name: r'coverUploadProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$coverUploadHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$CoverUpload = AutoDisposeAsyncNotifier<bool?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

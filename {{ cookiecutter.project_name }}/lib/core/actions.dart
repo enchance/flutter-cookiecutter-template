@@ -13,20 +13,21 @@ Future<void> scrollToTop(ScrollController scrollcon, {bool unfocus = true}) asyn
 }
 
 /// Sign out the user. [text] is optional text shown in the sign-in view if needed.
-Future<void> signOut(BuildContext context, WidgetRef ref, {String? text}) async {
+Future<void> signOut(BuildContext context, dynamic ref, {String? text}) async {
   final prefs = ref.watch(prefsProvider);
-
+  // Sign-out
   await prefs.setBool('showAuthWall', true);
   await ref.read(authProvider.notifier).signOut();
 
   // -------------------------------------------
   // Clean up
   // -------------------------------------------
-  ref.read(authAccountProvider.notifier).update((_) => const AuthAccount());
-  ref.read(accountProvider.notifier).update((_) => Account.empty());
-  ref.read(authPendingProvider.notifier).update((_) => '');
-  ref.read(signOutTextProvider.notifier).update((_) => text);
-  ref.read(appConfigProvider.notifier).clear();
+  if (context.mounted) {
+    ref.read(accountProvider.notifier).update((_) => Account.empty());
+    ref.read(authPendingProvider.notifier).update((_) => '');
+    ref.read(signOutTextProvider.notifier).update((_) => text);
+    ref.read(appConfigProvider.notifier).clear();
+  }
 }
 
 /// Launch a [url].
@@ -56,4 +57,11 @@ TextStyle appTextStyle(BuildContext context, [TextSize textSize = TextSize.mediu
   if (textSize == TextSize.medium) return theme.textTheme.bodyMedium!;
   if (textSize == TextSize.large) return theme.textTheme.bodyLarge!;
   return theme.textTheme.bodyMedium!.copyWith(fontSize: 26);
+}
+
+/// Remove keys which should never be modified manually. The DB is in charge of these.
+Map<String, dynamic> stripImmutableFields(Map<String, dynamic> datamap) {
+  final toExclude = ['id', 'updated_at', 'created_at'];
+  datamap.removeWhere((k, v) => toExclude.contains(k));
+  return datamap;
 }

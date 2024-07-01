@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core.dart';
 import '../../../components/components.dart';
@@ -226,14 +227,10 @@ Wrong password. Try typing slower.
 
   Future<String> saveFormData(Map<String, dynamic> json) async {
     Account account = ref.watch(accountProvider);
-    final settings = ref.watch(settingsProvider);
 
     try {
       // throw Exception();
       // throw FirebaseAuthException(code: 'wrong-password');
-
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user == null) throw UserNullException();
 
       // if (json.containsKey('email')) {
       //   final String password = await showDialog(
@@ -260,22 +257,19 @@ Wrong password. Try typing slower.
       //   );
       //   // _verificationSent = true;
       // }
-      if (json.containsKey('display')) {
-        await user.updateDisplayName(json['display']);
-        account = account.copyWith(display: json['display']);
-      }
+      if (json.containsKey('display')) account = account.copyWith(display: json['display']);
       if (json.containsKey('phone')) account = account.copyWith(phone: json['phone']);
       if (json.containsKey('fullname')) account = account.copyWith(fullname: json['fullname']);
       // TODO: If email is changend only save after verification
-      bool success = await AccountService.save(user.uid, json);
-      if (success) {
-        ref.read(accountProvider.notifier).update((_) => account);
-        return 'success';
-      }
-      throw Exception();
-    } on FirebaseAuthException catch (err) {
-      // logger.e(err.code);
-      if (err.code == 'wrong-password') return 'wrong-password';
+      bool success = await AccountService.save(account.id!, json);
+      if (!success) throw Exception();
+
+      ref.read(accountProvider.notifier).update((_) => account);
+      return 'success';
+    } on AuthException catch (err) {
+      logger.e(err);
+      // TODO: See if there is an alternative for this in supa
+      // if (err.code == 'wrong-password') return 'wrong-password';
       return '';
     } catch (err, _) {
       logger.e(err);

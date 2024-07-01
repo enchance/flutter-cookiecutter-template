@@ -21,6 +21,10 @@ class AccountNullException extends AppException {
   AccountNullException([super.message = 'Account cannot be null', super.title = 'NULL_ACCOUNT']);
 }
 
+class RowNotFoundException extends AppException {
+  RowNotFoundException([super.message = 'Row does not exist', super.title = 'ROW_NOT_FOUND']);
+}
+
 class ValueExistsException extends AppException {
   ValueExistsException([super.message = 'Value already in use.', super.title = 'VALUE_EXISTS']);
 }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:icons_plus/icons_plus.dart';
 
+import '../core/account/providers.dart';
 import '../core/auth/providers.dart';
 
 class ElevatedLoadingButton extends StatelessWidget {
@@ -93,16 +94,18 @@ class GoogleLinkAccountButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final account = ref.watch(accountProvider);
     final authpending = ref.watch(authPendingProvider);
 
     return SizedBox(
       width: 250,
       child: ElevatedLoadingButton(
         text: 'Link Google Account',
-        onPressed: () => ref.read(authProvider.notifier).linkAccount(context),
+        onPressed: ref.read(authProvider.notifier).linkGoogleIdentity,
+        // onPressed: () => ref.read(authProvider.notifier).linkAccount(context),
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
-        loading: authpending == 'linkGoogle',
+        loading: authpending == 'google',
         icon: const Icon(Bootstrap.google, size: 20),
       ),
     );

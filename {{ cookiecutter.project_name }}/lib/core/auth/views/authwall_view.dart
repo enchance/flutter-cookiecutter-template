@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core.dart';
 import '../../../components/components.dart';
@@ -76,8 +77,7 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
                 if (showPasswordError) ...[
                   const SizedBox(height: 10),
                   const ErrorNoticeBox(
-                      message: 'Please check if you typed your password '
-                          'correctly.'),
+                      message: 'Please check if you typed your password correctly.'),
                 ],
                 if (showTryAgainError) ...[
                   const SizedBox(height: 10),
@@ -89,7 +89,7 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
                   width: double.infinity,
                   child: ElevatedLoadingButton(
                     text: 'Google Sign-in',
-                    onPressed: () => googleSignin(context),
+                    onPressed: ref.read(authProvider.notifier).googleSignIn,
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,
                     loading: authpending == 'google',
@@ -109,12 +109,9 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
     );
   }
 
-  void googleSignin(BuildContext context) async {
-    await ref.read(authProvider.notifier).googleSignIn();
-  }
-
   Widget buildSignInForm() {
     final authpending = ref.watch(authPendingProvider);
+    final theme = Theme.of(context);
 
     return Column(
       children: [
@@ -131,21 +128,50 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
                 : <String, String>{},
             child: Column(
               children: [
-                FormBuilderTextField(
-                  name: 'email',
-                  valueTransformer: (val) => val?.trim(),
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.email(),
-                    FormBuilderValidators.maxLength(100)
-                  ]),
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
-                  ),
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                ),
+                kDebugMode
+                    ? FormBuilderDropdown(
+                        name: 'email',
+                        initialValue: 'enchance@gmail.com',
+                        items: const [
+                          DropdownMenuItem(
+                            value: 'enchance@gmail.com',
+                            child: Text(
+                              'enchance@gmail.com',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 'devteam123@proton.me',
+                            child: Text(
+                              'devteam123@proton.me',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          ),
+                          DropdownMenuItem(
+                            value: 'codezmj7nw6qbrrerjlh93uugpon8j@gmail.com',
+                            child: Text(
+                              'codezmj7nw6qbrrerjlh93uugpon8j@gmail.com',
+                              style: TextStyle(fontSize: 18),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      )
+                    : FormBuilderTextField(
+                        name: 'email',
+                        valueTransformer: (val) => val?.trim(),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.email(),
+                          FormBuilderValidators.maxLength(100)
+                        ]),
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: Icon(Icons.email_outlined),
+                        ),
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                      ),
                 // if ((formKey.currentState?.fields['email']?.hasError ?? false) == false)
                 //   FieldRequiredText(),
                 const SizedBox(height: 10),
@@ -246,29 +272,30 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
             ),
           ),
         ],
-        const SizedBox(height: 5),
+        // const SizedBox(height: 5),
+        // TextButton(
+        //   onPressed: authpending != 'google' && authpending != 'email'
+        //       ? () async {
+        //           final prefs = ref.watch(prefsProvider);
+        //
+        //           await Future.wait([
+        //             prefs.setBool('showOnboarding', false),
+        //             prefs.setBool('showAuthWall', false),
+        //             ref.read(authProvider.notifier).anonymousSignIn(),
+        //           ]);
+        //         }
+        //       : null,
+        //   child: authpending == 'anonymous'
+        //       ? const SizedBox(
+        //           width: 24,
+        //           height: 24,
+        //           child: CircularProgressIndicator(),
+        //         )
+        //       : const Text('Try without account'),
+        // ),
         TextButton(
-          onPressed: authpending != 'google' && authpending != 'email'
-              ? () async {
-                  final prefs = ref.watch(prefsProvider);
-
-                  await Future.wait([
-                    prefs.setBool('showOnboarding', false),
-                    prefs.setBool('showAuthWall', false),
-                    ref.read(authProvider.notifier).anonymousSignIn(),
-                  ]);
-                }
-              : null,
-          // style: TextButton.styleFrom(
-          //   foregroundColor: theme.colorScheme.onSurface.withOpacity(0.5),
-          // ),
-          child: authpending == 'anonymous'
-              ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(),
-                )
-              : const Text('Try without account'),
+          onPressed: () => signOut(context, ref),
+          child: const Text('Sign-out'),
         ),
       ],
     );
@@ -290,10 +317,12 @@ class _AuthWallViewState extends ConsumerState<AuthWallView> {
 
       // Start here
       await AuthService.emailSignin(data['email'], data['password']);
-    } on FirebaseAuthException catch (err) {
-      logger.d(err.code);
+    } on AuthException catch (err) {
+      logger.d(err.message);
       ref.read(authPendingProvider.notifier).update((_) => '');
-      if (err.code == 'wrong-password') return setState(() => showPasswordError = true);
+      if (err.message == 'Invalid login credentials') {
+        return setState(() => showPasswordError = true);
+      }
       setState(() => showTryAgainError = true);
     } catch (err, _) {
       logger.e(err);

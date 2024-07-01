@@ -7,6 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
+import 'package:path/path.dart' as path;
 
 import '../../core.dart';
 import '../../../components/components.dart';
@@ -58,7 +61,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(kDebugMode ? account.uid : settings.appName),
+          title: Text(kDebugMode ? account.id! : settings.appName),
           actions: const [
             AppbarMenu(),
           ],
@@ -98,8 +101,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
                               TextButton(
                                 onPressed: () => editProfile(context),
                                 style: TextButton.styleFrom(
-                                  foregroundColor: theme.colorScheme.primary
-                                ),
+                                    foregroundColor: theme.colorScheme.primary),
                                 child: const Text('Edit Profile'),
                               ),
                               const SizedBox(height: 20),
@@ -107,9 +109,9 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
                                   style: theme.textTheme.titleMedium),
                               const SizedBox(height: 10),
                               if (account.fullname.isNotEmpty) Text(account.fullname),
-                              account.email.isNotEmpty
-                                  ? Text(account.email, style: textStyle)
-                                  : const GoogleLinkAccountButton(),
+                              // account.email.isNotEmpty
+                              //     ? Text(account.email, style: textStyle)
+                              //     : const GoogleLinkAccountButton(),
                             ],
                           ),
                         ),
@@ -130,10 +132,10 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
   }
 
   Widget buildCoverPreloader() {
-    final uploadcoverprov = ref.watch(uploadCoverProvider);
+    final coverprov = ref.watch(coverUploadProvider);
     final theme = Theme.of(context);
 
-    return uploadcoverprov.maybeWhen(
+    return coverprov.maybeWhen(
       loading: () {
         return SizedBox(
           width: 36,
@@ -156,7 +158,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
 
   Widget buildAvatar() {
     final account = ref.watch(accountProvider);
-    final uploadprov = ref.watch(uploadAvatarProvider);
+    final avatarprov = ref.watch(avatarUploadProvider);
     final theme = Theme.of(context);
 
     return Stack(
@@ -171,7 +173,7 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
             border: Border.all(color: theme.colorScheme.surface, width: 4),
             color: theme.colorScheme.surface,
           ),
-          child: uploadprov.maybeWhen(
+          child: avatarprov.maybeWhen(
             loading: () {
               return Stack(
                 alignment: Alignment.center,
@@ -225,6 +227,23 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
             ),
           ),
         ),
+        if (account.avatar.isNotEmpty)
+          Positioned(
+            left: 15,
+            bottom: 7,
+            child: SizedBox(
+              width: 30,
+              height: 30,
+              child: IconButton(
+                onPressed: ref.read(avatarUploadProvider.notifier).clear,
+                icon: const Icon(Bootstrap.trash3, size: 16),
+                color: Colors.grey,
+                style: IconButton.styleFrom(
+                  backgroundColor: theme.colorScheme.surface.withOpacity(opacity1),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -244,19 +263,20 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
   void pickAvatarImage() async {
     try {
       final picker = ImagePicker();
-      final XFile? selectedImage = await picker.pickImage(
+      final XFile? image = await picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 90,
         maxHeight: 300,
       );
-      if (selectedImage == null) return;
-      final file = File(selectedImage.path);
-      await ref.read(uploadAvatarProvider.notifier).upload(file);
+      if (image == null) return;
+      final file = File(image.path);
+      await ref.read(avatarUploadProvider.notifier).upload(file);
     } on PlatformException catch (err) {
       // User declined permissions
       logger.d(err);
       if (mounted) showErrorDialog(context, title: 'Upload error', message: err.toString());
     } on UploadFailedException catch (err, _) {
+      logger.e(err);
       if (mounted) showErrorDialog(context, title: 'Upload error', message: err.toString());
     } catch (err, _) {
       logger.e(err);
@@ -269,19 +289,20 @@ class _AccountViewState extends ConsumerState<AccountView> with SingleTickerProv
 
     try {
       final picker = ImagePicker();
-      final XFile? selectedImage = await picker.pickImage(
+      final XFile? image = await picker.pickImage(
         source: ImageSource.gallery,
         imageQuality: 90,
         maxHeight: settings.imageMaxHeight,
       );
-      if (selectedImage == null) return;
-      final file = File(selectedImage.path);
-      await ref.read(uploadCoverProvider.notifier).upload(file);
+      if (image == null) return;
+      final file = File(image.path);
+      await ref.read(coverUploadProvider.notifier).upload(file);
     } on PlatformException catch (err) {
       // User declined permissions
-      logger.e(err);
+      logger.d(err);
       if (mounted) showErrorDialog(context, title: 'Upload error', message: err.toString());
     } on UploadFailedException catch (err, _) {
+      logger.e(err);
       if (mounted) showErrorDialog(context, title: 'Upload error', message: err.toString());
     } catch (err, _) {
       logger.e(err);

@@ -543,11 +543,10 @@ hs_err_pid*
 # End of https://www.toptal.com/developers/gitignore/api/intellij,dart,python,flutter,firebase,androidstudio,sublimetext
 
 
-/.dev/
 /build/
 !/lib/
-!/lib/gen/
 firebase-adminsdk.json
 service-account.json
 *service-account.json
 /seed/assets
+/supabase/*/
